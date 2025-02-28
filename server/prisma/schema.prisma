@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id         String         @id @default(cuid())
+  name       String
+  email      String         @unique
+  mobileNo   String         @unique
+  password   String
+  permission String[]
+  isOwner    Boolean        @default(false)
+  otps       OTP[]
+  createdAt  DateTime       @default(now())
+  sessions   AdminSession[]
+
+  @@map("admin_user")
+}
+
+model OTP {
+  id          String   @id @default(cuid())
+  code        Int
+  adminUserId String?
+  createdAt   DateTime @default(now())
+  expireAt    DateTime @default(dbgenerated("now() + INTERVAL '15 minutes'"))
+
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@map("otp")
+}
+
+model AdminSession {
+  id          String     @id @default(cuid())
+  adminUserId String
+  createdAt   DateTime   @default(now())
+  expireAt    DateTime   @default(dbgenerated("now() + INTERVAL '1 hour'"))
+  AdminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@map("admin_session")
+}
