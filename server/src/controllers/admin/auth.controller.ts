@@ -117,8 +117,6 @@ export async function verificationHandler(req: Request, res: Response) {
 
       return 0;
     });
-    console.log(otps);
-    console.log(data);
     if (otps[0].code != data.otpCode) {
       res.status(400).json({
         msg: "Wrong Otp",
