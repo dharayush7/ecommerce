@@ -11,6 +11,10 @@ interface VerficationResponse {
   msg: string;
 }
 
+interface ResendResponse {
+  msg: string;
+}
+
 const HOST = process.env.SERVER_HOST!;
 
 export const loginRequest = async ({
@@ -51,6 +55,24 @@ export const verificationRequest = async ({
     });
 
     return data.data as VerficationResponse;
+  } catch (error) {
+    console.log(error);
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as VerficationResponse;
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+export const resendRequest = async (userId: string) => {
+  try {
+    const data = await axios.post(`${HOST}/admin/auth/resend`, {
+      userId,
+    });
+
+    return data.data as ResendResponse;
   } catch (error) {
     console.log(error);
     const e = error as AxiosError;

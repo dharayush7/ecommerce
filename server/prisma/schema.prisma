@@ -35,11 +35,11 @@ model OTP {
 }
 
 model AdminSession {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   adminUserId String
-  createdAt   DateTime   @default(now())
-  expireAt    DateTime   @default(dbgenerated("now() + INTERVAL '1 hour'"))
-  AdminUser   AdminUser? @relation(fields: [adminUserId], references: [id])
+  createdAt   DateTime  @default(now())
+  expireAt    DateTime  @default(dbgenerated("now() + INTERVAL '1 hour'"))
+  AdminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
 
   @@map("admin_session")
 }

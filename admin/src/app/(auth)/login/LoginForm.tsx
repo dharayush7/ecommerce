@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState, useTransition } from "react";
-import LoadingThemeButton from "@/components/LoadingButton";
+import LoadingThemeButton from "@/components/LoadingThemeButton";
 import { Input } from "@/components/ui/input";
 import { login } from "./action";
 

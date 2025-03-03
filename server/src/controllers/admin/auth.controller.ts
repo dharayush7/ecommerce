@@ -173,3 +173,43 @@ export async function verificationHandler(req: Request, res: Response) {
     });
   }
 }
+
+export async function resendOTPHandler(req: Request, res: Response) {
+  const userId = req.body.userId as Nullable;
+  if (!userId) {
+    res.status(400).json({
+      msg: "user not found",
+    });
+    return;
+  }
+  try {
+    const otps = await prisma.oTP.findMany({
+      where: {
+        adminUserId: {
+          equals: userId,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (otps.length == 0) {
+      res.status(400).json({
+        msg: "user or otp not found",
+      });
+      return;
+    }
+
+    console.log({ otp: otps[0].code });
+
+    res.json({
+      msg: "Otp resend successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}

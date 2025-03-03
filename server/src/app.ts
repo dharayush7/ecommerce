@@ -3,6 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import adminAuthRouter from "@/routes/admin/auth.routes";
+import adminManegerRouter from "@/routes/admin/maneger.routes";
 
 async function init() {
   const app = express();
@@ -12,15 +13,18 @@ async function init() {
   app.use(cookieParser());
   app.use(cors());
 
-  app.get("/status", (req, res) => {
+  app.get("/status", (_req, res) => {
     res.json({ msg: "Online" });
   });
-  app.use((req, res, next) => {
+
+  app.use((req, _res, next) => {
     const time = new Date(Date.now()).toString();
     console.log(req.method, req.hostname, req.path, time);
     next();
   });
+
   app.use("/admin/auth", adminAuthRouter);
+  app.use("/admin/maneger", adminManegerRouter);
 
   app.listen(PORT, () => {
     console.log(`Server started at port:${PORT}`);

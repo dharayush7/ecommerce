@@ -2,7 +2,7 @@
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { verificationRequest } from "@/services/authentication";
+import { resendRequest, verificationRequest } from "@/services/authentication";
 
 export const verfication = async ({ otpCode }: { otpCode: string }) => {
   try {
@@ -22,6 +22,24 @@ export const verfication = async ({ otpCode }: { otpCode: string }) => {
     });
     cookieStore.set("permission", response.permission.join(","), { expires });
     redirect("/");
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    console.log(error);
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return String(error);
+  }
+};
+
+export const resendOtp = async () => {
+  try {
+    const cookieStore = await cookies();
+    const userId = cookieStore.get("id");
+    if (!userId) redirect("/login");
+    const response = await resendRequest(userId.value);
+
+    return response.msg;
   } catch (error) {
     if (isRedirectError(error)) throw error;
     console.log(error);

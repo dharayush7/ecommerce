@@ -8,7 +8,7 @@
     "build": "tsc -p . && prisma db push",
     "envStart": "node --env-file='.env' dist/app.js",
     "dev": "tsc-watch --onSuccess \"npm run envStart\"",
-    "create_admin": "node script/createAdmin.js"
+    "create-admin": "node script/createAdmin.js"
   },
   "author": "AYUSH DHAR",
   "license": "MIT",
