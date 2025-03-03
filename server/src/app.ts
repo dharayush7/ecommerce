@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import adminAuthRouter from "@/routes/admin/auth.routes";
 import adminManegerRouter from "@/routes/admin/maneger.routes";
+import authRouter from "@/routes/auth.routes";
 
 async function init() {
   const app = express();
@@ -25,6 +26,8 @@ async function init() {
 
   app.use("/admin/auth", adminAuthRouter);
   app.use("/admin/maneger", adminManegerRouter);
+
+  app.use("/auth", authRouter);
 
   app.listen(PORT, () => {
     console.log(`Server started at port:${PORT}`);

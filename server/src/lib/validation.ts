@@ -38,3 +38,18 @@ export const updatePermisionOfManegerSchema = z.object({
   customer: z.boolean(),
   site: z.boolean(),
 });
+
+export const userLoginSchema = z.object({
+  mobileNo: z.number().min(10, "Invalid phone number"),
+});
+
+export const userVerificationSchema = z.object({
+  userId: z.string().min(8, "UserId not valid"),
+  otpCode: z.number().min(6, "Otp should be 6 charecter"),
+});
+
+export const verifyOtpSchema = z.object({
+  sessionId: z.string(),
+  mobileOtp: z.number().min(6, "Otp should be 6 charecter"),
+  emailOtp: z.number().min(6, "Otp should be 6 charecter"),
+});

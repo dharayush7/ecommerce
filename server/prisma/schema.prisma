@@ -8,30 +8,52 @@ datasource db {
 }
 
 model AdminUser {
-  id         String         @id @default(cuid())
-  name       String
-  email      String         @unique
-  mobileNo   String         @unique
-  password   String
-  permission String[]
-  isOwner    Boolean        @default(false)
-  otps       OTP[]
-  createdAt  DateTime       @default(now())
-  sessions   AdminSession[]
+  id                        String                     @id @default(cuid())
+  name                      String
+  email                     String                     @unique
+  mobileNo                  String                     @unique
+  password                  String
+  permission                String[]
+  isOwner                   Boolean                    @default(false)
+  otps                      OTP[]
+  createdAt                 DateTime                   @default(now())
+  sessions                  AdminSession[]
+  adminRestPasswordSessions AdminRestPasswordSession[]
 
   @@map("admin_user")
 }
 
 model OTP {
-  id          String   @id @default(cuid())
-  code        Int
-  adminUserId String?
-  createdAt   DateTime @default(now())
-  expireAt    DateTime @default(dbgenerated("now() + INTERVAL '15 minutes'"))
+  id                         String   @id @default(cuid())
+  code                       Int
+  type                       TYPE
+  adminUserId                String
+  adminRestPasswordSessionId String?
+  createdAt                  DateTime @default(now())
+  expireAt                   DateTime @default(dbgenerated("now() + INTERVAL '15 minutes'"))
 
-  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+  adminUser                AdminUser                 @relation(fields: [adminUserId], references: [id])
+  AdminRestPasswordSession AdminRestPasswordSession? @relation(fields: [adminRestPasswordSessionId], references: [id])
 
   @@map("otp")
+}
+
+enum TYPE {
+  EMAIL
+  MOBILE
+}
+
+model AdminRestPasswordSession {
+  id          String    @id @default(cuid())
+  adminUserId String
+  isVarfied   Boolean   @default(false)
+  isChanged   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  expireAt    DateTime  @default(dbgenerated("now() + INTERVAL '15 minutes'"))
+  otp         OTP[]
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@map("admin_rest_password_session")
 }
 
 model AdminSession {
@@ -42,4 +64,38 @@ model AdminSession {
   AdminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
 
   @@map("admin_session")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  mobileNo        String    @unique
+  name            String    @default("user")
+  email           String?   @unique
+  isEmailVerified Boolean   @default(false)
+  varified        Boolean   @default(false)
+  blocked         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  session         Session[]
+  userOTP         UserOTP[]
+
+  @@map("user")
+}
+
+model Session {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model UserOTP {
+  id        String   @id @default(cuid())
+  code      Int
+  userId    String
+  createdAt DateTime @default(now())
+  expireAt  DateTime @default(dbgenerated("now() + INTERVAL '15 minutes'"))
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_id")
 }

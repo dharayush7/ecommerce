@@ -1,3 +1,4 @@
+import { VerifyOTPsRequest } from "@/lib/type";
 import axios, { AxiosError } from "axios";
 
 interface LoginResponse {
@@ -11,7 +12,16 @@ interface VerficationResponse {
   msg: string;
 }
 
+interface RestPasswordResponse {
+  restSessionId: string;
+  msg: string;
+}
+
 interface ResendResponse {
+  msg: string;
+}
+
+interface GeneralResponse {
   msg: string;
 }
 
@@ -78,6 +88,89 @@ export const resendRequest = async (userId: string) => {
     const e = error as AxiosError;
     if (e.response) {
       const res = e.response.data as VerficationResponse;
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+export const restPassword = async (email: string) => {
+  try {
+    const data = await axios.post(`${HOST}/admin/auth/forget-password`, {
+      email,
+    });
+
+    return data.data as RestPasswordResponse;
+  } catch (error) {
+    console.log(error);
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as RestPasswordResponse;
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+interface VerifyOTPsRequestBody extends VerifyOTPsRequest {
+  sessionId: string;
+}
+
+export const verifyOTPsRequest = async ({
+  sessionId,
+  ...body
+}: VerifyOTPsRequestBody) => {
+  try {
+    const data = await axios.post(
+      `${HOST}/admin/auth/verify-opts`,
+      {
+        ...body,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionId}`,
+        },
+      }
+    );
+
+    return data.data as GeneralResponse;
+  } catch (error) {
+    console.log(error);
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as GeneralResponse;
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+export const chnagePasswordRequest = async ({
+  password,
+  sessionId,
+}: {
+  password: string;
+  sessionId: string;
+}) => {
+  try {
+    const data = await axios.post(
+      `${HOST}/admin/auth/change-password`,
+      {
+        password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionId}`,
+        },
+      }
+    );
+
+    return data.data as GeneralResponse;
+  } catch (error) {
+    console.log(error);
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as GeneralResponse;
       throw new Error(res.msg);
     }
     throw new Error("Unknown error occoured");

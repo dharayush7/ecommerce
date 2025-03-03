@@ -31,3 +31,8 @@ export interface UpdatedPermissionRequest {
   customer: boolean;
   site: boolean;
 }
+
+export interface VerifyOTPsRequest {
+  mobileOtp: string;
+  emailOtp: string;
+}

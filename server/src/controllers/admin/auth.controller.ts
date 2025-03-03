@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
-import { adminVerificationSchema, loginSchema } from "@/lib/validation";
+import { z } from "zod";
+import {
+  adminVerificationSchema,
+  loginSchema,
+  verifyOtpSchema,
+} from "@/lib/validation";
 import prisma from "@/lib/prisma";
-import { comparePassword } from "@/lib/password";
+import { comparePassword, hashPasword } from "@/lib/password";
 import { Nullable } from "@/types";
 import { checkExpiry } from "@/lib/function";
 
@@ -52,6 +57,7 @@ export async function loginHandler(req: Request, res: Response) {
     });
     const otp = await prisma.oTP.create({
       data: {
+        type: "EMAIL",
         code: otpCode,
         adminUserId: user.id,
       },
@@ -205,6 +211,242 @@ export async function resendOTPHandler(req: Request, res: Response) {
 
     res.json({
       msg: "Otp resend successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function forgetOtpHandler(req: Request, res: Response) {
+  const email = req.body.email as Nullable;
+  const result = z.string().email("Invalid email").safeParse(email);
+  if (!result.success) {
+    res.status(400).json({
+      msg: result.error.issues[0].message,
+    });
+    return;
+  }
+  try {
+    const admin = await prisma.adminUser.findUnique({
+      where: {
+        email: result.data,
+      },
+    });
+
+    if (!admin) {
+      res.status(400).json({
+        msg: "User not found",
+      });
+      return;
+    }
+
+    const [restSession, _otp] = await Promise.all([
+      prisma.adminRestPasswordSession.create({
+        data: {
+          adminUserId: admin.id,
+        },
+      }),
+      prisma.oTP.deleteMany({
+        where: {
+          adminUserId: admin.id,
+        },
+      }),
+    ]);
+
+    const mobileOtp = Math.floor(100000 + Math.random() * 900000);
+    const emailOtp = Math.floor(100000 + Math.random() * 900000);
+    // TODO: OTP Sent
+
+    console.log({ mobileOtp, emailOtp });
+
+    await Promise.all([
+      prisma.oTP.create({
+        data: {
+          adminUserId: admin.id,
+          code: mobileOtp,
+          type: "MOBILE",
+          adminRestPasswordSessionId: restSession.id,
+        },
+      }),
+      prisma.oTP.create({
+        data: {
+          adminUserId: admin.id,
+          code: emailOtp,
+          type: "EMAIL",
+          adminRestPasswordSessionId: restSession.id,
+        },
+      }),
+    ]);
+
+    res.json({
+      restSessionId: restSession.id,
+      msg: "OTP send successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function verifyOtpHandler(req: Request, res: Response) {
+  const emailOtp = req.body.emailOtp as Nullable;
+  const mobileOtp = req.body.mobileOtp as Nullable;
+  const sessionId = req.headers.authorization;
+  let result;
+  try {
+    result = verifyOtpSchema.safeParse({
+      emailOtp: Number(emailOtp),
+      mobileOtp: Number(mobileOtp),
+      sessionId,
+    });
+    if (!result.success) {
+      res.status(400).json({
+        msg: result.error.issues[0].message,
+      });
+      return;
+    }
+  } catch (error) {
+    result = null;
+    res.status(400).json({
+      msg: "Otp should be number",
+    });
+    return;
+  }
+
+  const data = result.data;
+  result = null;
+
+  try {
+    const session = await prisma.adminRestPasswordSession.findUnique({
+      where: {
+        id: data.sessionId.split(" ")[1],
+      },
+      include: {
+        otp: true,
+      },
+    });
+
+    if (!session) {
+      res.status(400).json({
+        msg: "session not found",
+      });
+      return;
+    }
+
+    if (!checkExpiry(session.expireAt)) {
+      res.status(401).json({
+        msg: "session expired",
+      });
+      return;
+    }
+    const mobileOtp = session.otp.filter((e) => e.type === "MOBILE")[0];
+    const emailOtp = session.otp.filter((e) => e.type === "EMAIL")[0];
+
+    if (mobileOtp.code != data.mobileOtp || emailOtp.code != data.emailOtp) {
+      res.status(401).json({
+        msg: "Wrong OTP",
+      });
+    }
+
+    await Promise.all([
+      prisma.adminRestPasswordSession.update({
+        where: {
+          id: session.id,
+        },
+        data: {
+          isVarfied: true,
+        },
+      }),
+      prisma.oTP.deleteMany({
+        where: {
+          adminRestPasswordSessionId: session.id,
+        },
+      }),
+    ]);
+
+    res.json({
+      msg: "OTP verified",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function chnagePasswordHandler(req: Request, res: Response) {
+  const password = req.body.password as Nullable;
+  const sessionId = req.headers.authorization;
+
+  if (!sessionId) {
+    res.status(401).json({
+      msg: "session not found",
+    });
+    return;
+  }
+  const result = z
+    .string()
+    .min(6, "Password should be atleast 6 charecter long")
+    .safeParse(password);
+
+  if (!result.success) {
+    res.status(400).json({
+      msg: result.error.issues[0].message,
+    });
+    return;
+  }
+
+  try {
+    const session = await prisma.adminRestPasswordSession.findUnique({
+      where: {
+        id: sessionId.split(" ")[1],
+        isVarfied: true,
+        isChanged: false,
+      },
+    });
+
+    if (!session) {
+      res.status(401).json({
+        msg: "Session not found",
+      });
+      return;
+    }
+
+    if (!checkExpiry(session.expireAt)) {
+      res.status(401).json({
+        msg: "Session expired",
+      });
+      return;
+    }
+    const hashed = await hashPasword(result.data);
+
+    await Promise.all([
+      prisma.adminRestPasswordSession.update({
+        where: {
+          id: session.id,
+        },
+        data: {
+          isChanged: true,
+        },
+      }),
+      prisma.adminUser.update({
+        where: {
+          id: session.adminUserId,
+        },
+        data: {
+          password: hashed,
+        },
+      }),
+    ]);
+
+    res.json({
+      msg: "password changed",
     });
   } catch (error) {
     console.log(error);

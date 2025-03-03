@@ -19,7 +19,7 @@ const LoadingThemeButton = ({
     <ThemeButton
       className={cn("gap-3", className)}
       {...props}
-      disabled={disabled || isLoading}
+      disabled={disabled ? disabled : isLoading}
     >
       {children}
       {isLoading && (
