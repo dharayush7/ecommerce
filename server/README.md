@@ -354,6 +354,283 @@ Body:
 }
 ```
 
+### Admin Product Routes
+
+These routes are protected by the `adminMiddleware`.
+
+#### POST /admin/product/add
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "name": "New Product",
+  "description": "Product description",
+  "description2": "Additional description",
+  "description3": "More details",
+  "points": ["Point 1", "Point 2"],
+  "maxPrice": 100.0,
+  "selPrice": 80.0,
+  "fragrence": "Floral",
+  "strength": "Strong",
+  "preference": "Unisex",
+  "sustainable": "Yes",
+  "type": "Perfume",
+  "idealFor": "Everyone",
+  "quantity": 50,
+  "categoryId": "category-id",
+  "images": ["image-id-1", "image-id-2"]
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Product added",
+  "data": {
+    "id": "product-id",
+    "name": "New Product",
+    "description": "Product description",
+    "description2": "Additional description",
+    "description3": "More details",
+    "points": ["Point 1", "Point 2"],
+    "maxPrice": 100.0,
+    "selPrice": 80.0,
+    "fragrence": "Floral",
+    "strength": "Strong",
+    "preference": "Unisex",
+    "sustainable": "Yes",
+    "type": "Perfume",
+    "idealFor": "Everyone",
+    "quantity": 50,
+    "categoryId": "category-id",
+    "images": ["image-id-1", "image-id-2"]
+  }
+}
+```
+
+#### GET /admin/product/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Product fetched",
+  "data": [
+    {
+      "id": "product-id",
+      "name": "Product Name",
+      "description": "Product description",
+      "description2": "Additional description",
+      "description3": "More details",
+      "points": ["Point 1", "Point 2"],
+      "maxPrice": 100.0,
+      "selPrice": 80.0,
+      "fragrence": "Floral",
+      "strength": "Strong",
+      "preference": "Unisex",
+      "sustainable": "Yes",
+      "type": "Perfume",
+      "idealFor": "Everyone",
+      "quantity": 50,
+      "categoryId": "category-id",
+      "images": ["image-id-1", "image-id-2"]
+    }
+  ]
+}
+```
+
+#### GET /admin/product/get/:id
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Product fetched",
+  "data": {
+    "id": "product-id",
+    "name": "Product Name",
+    "description": "Product description",
+    "description2": "Additional description",
+    "description3": "More details",
+    "points": ["Point 1", "Point 2"],
+    "maxPrice": 100.0,
+    "selPrice": 80.0,
+    "fragrence": "Floral",
+    "strength": "Strong",
+    "preference": "Unisex",
+    "sustainable": "Yes",
+    "type": "Perfume",
+    "idealFor": "Everyone",
+    "quantity": 50,
+    "categoryId": "category-id",
+    "images": ["image-id-1", "image-id-2"]
+  }
+}
+```
+
+#### GET /admin/product/change-status/:id
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Query Parameters:
+
+```json
+{
+  "status": "true"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Status updated"
+}
+```
+
+#### POST /admin/product/update
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "id": "product-id",
+  "name": "Updated Product",
+  "description": "Updated description",
+  "description2": "Updated additional description",
+  "description3": "Updated more details",
+  "points": ["Updated Point 1", "Updated Point 2"],
+  "maxPrice": 120.0,
+  "selPrice": 90.0,
+  "fragrence": "Woody",
+  "strength": "Medium",
+  "preference": "Male",
+  "sustainable": "No",
+  "type": "Cologne",
+  "idealFor": "Men",
+  "quantity": 100,
+  "categoryId": "updated-category-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Product updated"
+}
+```
+
+#### POST /admin/product/update-media
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "productId": "product-id",
+  "image": ["new-image-id-1", "new-image-id-2"]
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Product image updated"
+}
+```
+
+#### POST /admin/product/upload
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "url": "https://example.com/image.jpg"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Media uploaded",
+  "data": {
+    "mediaId": "media-id"
+  }
+}
+```
+
 ### Middleware
 
 #### Admin Middleware

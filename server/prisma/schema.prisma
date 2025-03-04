@@ -97,5 +97,52 @@ model UserOTP {
   expireAt  DateTime @default(dbgenerated("now() + INTERVAL '15 minutes'"))
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("user_id")
+  @@map("user_otp")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("category")
+}
+
+model Product {
+  id           String         @id @default(cuid())
+  name         String
+  description  String
+  description2 String
+  description3 String?
+  points       String[]
+  maxPrice     Float
+  selPrice     Float
+  fragrence    String?
+  strength     String?
+  preference   String?
+  sustainable  String?
+  type         String?
+  idealFor     String?
+  quantity     Int?
+  isLive       Boolean        @default(false)
+  categoryId   String
+  category     Category       @relation(fields: [categoryId], references: [id])
+  images       ProductImage[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("product")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  productId String?
+  createdAt DateTime @default(now())
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("product_image")
 }

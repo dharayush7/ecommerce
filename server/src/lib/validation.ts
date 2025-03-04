@@ -53,3 +53,41 @@ export const verifyOtpSchema = z.object({
   mobileOtp: z.number().min(6, "Otp should be 6 charecter"),
   emailOtp: z.number().min(6, "Otp should be 6 charecter"),
 });
+
+export const addProductSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().min(1, "Description is required"),
+  description2: z.string().min(1, "Description2 is required"),
+  description3: z.string().optional(),
+  points: z.array(z.string()).optional(),
+  maxPrice: z.number().min(0, "Max price is required"),
+  selPrice: z.number().min(0, "Selected price is required"),
+  fragrence: z.string().optional(),
+  strength: z.string().optional(),
+  preference: z.string().optional(),
+  sustainable: z.string().optional(),
+  type: z.string().optional(),
+  idealFor: z.string().optional(),
+  quantity: z.number().optional(),
+  categoryId: z.string().min(1, "Category ID is required"),
+  images: z.array(z.string()).optional(),
+});
+
+export const updateProductSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().min(1, "Description is required"),
+  description2: z.string().min(1, "Description2 is required"),
+  description3: z.string().optional(),
+  points: z.array(z.string()).optional(),
+  maxPrice: z.number().min(0, "Max price is required"),
+  selPrice: z.number().min(0, "Selected price is required"),
+  fragrence: z.string().optional(),
+  strength: z.string().optional(),
+  preference: z.string().optional(),
+  sustainable: z.string().optional(),
+  type: z.string().optional(),
+  idealFor: z.string().optional(),
+  quantity: z.number().optional(),
+  categoryId: z.string().min(1, "Category ID is required"),
+});

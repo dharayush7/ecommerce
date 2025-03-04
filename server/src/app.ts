@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import adminAuthRouter from "@/routes/admin/auth.routes";
 import adminManegerRouter from "@/routes/admin/maneger.routes";
+import adminProductRouter from "@/routes/admin/product.routes";
 import authRouter from "@/routes/auth.routes";
 
 async function init() {
@@ -26,6 +27,7 @@ async function init() {
 
   app.use("/admin/auth", adminAuthRouter);
   app.use("/admin/maneger", adminManegerRouter);
+  app.use("/admin/product", adminProductRouter);
 
   app.use("/auth", authRouter);
 
