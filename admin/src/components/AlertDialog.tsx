@@ -34,6 +34,7 @@ function AlertDialog({
         <DialogFooter>
           <Button
             variant="outline"
+            className="cursor-pointer"
             onClick={() => {
               if (!isLoading) setIsOpen(false);
             }}

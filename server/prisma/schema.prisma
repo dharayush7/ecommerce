@@ -119,7 +119,7 @@ model Product {
   description3 String?
   points       String[]
   maxPrice     Float
-  selPrice     Float
+  sellPrice    Float
   fragrence    String?
   strength     String?
   preference   String?

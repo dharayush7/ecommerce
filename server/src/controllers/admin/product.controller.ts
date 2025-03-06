@@ -10,7 +10,7 @@ interface AddProductRequest {
   description3: Nullable;
   points: string[] | null | undefined;
   maxPrice: Nullable;
-  selPrice: Nullable;
+  sellPrice: Nullable;
   fragrence: Nullable;
   strength: Nullable;
   preference: Nullable;
@@ -30,7 +30,7 @@ interface UpdateProductRequest {
   description3: Nullable;
   points: string[] | null | undefined;
   maxPrice: Nullable;
-  selPrice: Nullable;
+  sellPrice: Nullable;
   fragrence: Nullable;
   strength: Nullable;
   preference: Nullable;
@@ -54,7 +54,12 @@ export async function addProductHandler(req: Request, res: Response) {
     });
     return;
   }
-  const result = addProductSchema.safeParse(values);
+  const result = addProductSchema.safeParse({
+    ...values,
+    maxPrice: Number(values.maxPrice),
+    sellPrice: Number(values.sellPrice),
+    quantity: Number(values.quantity),
+  });
   if (!result.success) {
     res.status(400).json({
       msg: result.error.issues[0],
@@ -132,10 +137,13 @@ export async function getProductByIdHandler(req: Request, res: Response) {
       where: {
         id: productId,
       },
+      include: {
+        images: true,
+      },
     });
 
     if (!data) {
-      res.json({
+      res.status(400).json({
         msg: "Product not found",
       });
       return;
@@ -309,46 +317,6 @@ export async function updateMediaOfProduct(req: Request, res: Response) {
 
     res.json({
       msg: "Product image updated",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      msg: "Internal server error",
-    });
-  }
-}
-
-export async function imageUplaod(req: Request, res: Response) {
-  const url = req.body.url as Nullable;
-  const user = req.admin;
-
-  if (
-    !user.permission.includes("ADMIN") &&
-    !user.permission.includes("PRODUCT")
-  ) {
-    res.status(401).json({
-      msg: "Access denied",
-    });
-    return;
-  }
-
-  if (!url) {
-    res.status(400).json({
-      msg: "url invalid",
-    });
-    return;
-  }
-
-  try {
-    const media = await prisma.productImage.create({
-      data: { url },
-    });
-
-    res.json({
-      msg: "Media uploaded",
-      data: {
-        mediaId: media.id,
-      },
     });
   } catch (error) {
     console.log(error);

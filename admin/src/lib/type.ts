@@ -36,3 +36,29 @@ export interface VerifyOTPsRequest {
   mobileOtp: string;
   emailOtp: string;
 }
+
+export interface ProductRequest {
+  name: string;
+  description: string;
+  description2: string;
+  description3: string;
+  points: string[];
+  maxPrice: string;
+  sellPrice: string;
+  fragrence: string;
+  strength: string;
+  preference: string;
+  sustainable: string;
+  type: string;
+  idealFor: string;
+  quantity: string;
+  categoryId: string;
+  images: string[];
+}
+
+export interface Media {
+  id: string;
+  createdAt: Date;
+  url: string;
+  productId: string;
+}

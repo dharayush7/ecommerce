@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,6 +19,7 @@ export default function RootLayout({
       <main className="w-[calc(100%-16rem)] relative left-(--sidebar-width)">
         {children}
       </main>
+      <Toaster />
     </SidebarProvider>
   );
 }
