@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/table";
 import { ProductRequest } from "@/lib/type";
 import AlertDialog from "@/components/AlertDialog";
-import { getProduct } from "./action";
+import { getProduct, updateStatus } from "./action";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Product extends ProductRequest {
   isLive: boolean;
@@ -76,18 +77,23 @@ export const MoreOption = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>Update product details</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/add")}>
+        <DropdownMenuItem
+          onClick={() => router.push(`/products/${product.id}/update`)}
+        >
+          Update product details
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(`/products/${product.id}/update-media`)}
+        >
           Update product images
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => {}}>Update status</DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => {
             setProduct(product);
             setIsDeleteDialog(true);
           }}
         >
-          Delete
+          Update status
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -97,7 +103,7 @@ export const MoreOption = ({
 export function DataTable({ products }: { products: Product[] }) {
   const [deleteDialog, setIsDeleteDialog] = useState(false);
   const [product, setProduct] = useState<Product>();
-  //   const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   return (
     <div className="w-full">
       <div className="rounded-md border">
@@ -137,12 +143,24 @@ export function DataTable({ products }: { products: Product[] }) {
         </Table>
       </div>
       <AlertDialog
-        btnTitle="Delete"
-        content="Are your want to delete"
-        isLoading={false}
+        btnTitle={product?.isLive ? "Inactive" : "Live"}
+        content="Are your want to update status"
+        isLoading={isPending}
         isOpen={deleteDialog}
         setIsOpen={setIsDeleteDialog}
-        onClick={() => {}}
+        onClick={() => {
+          startTransition(async () => {
+            const currentState = product ? product.isLive : false;
+            const err = await updateStatus({
+              productId: product?.id || "",
+              status: !currentState,
+            });
+            if (err) {
+              toast(err);
+            }
+            setIsDeleteDialog(false);
+          });
+        }}
       />
     </div>
   );

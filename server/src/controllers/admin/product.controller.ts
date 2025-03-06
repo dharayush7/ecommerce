@@ -18,7 +18,7 @@ interface AddProductRequest {
   type: Nullable;
   idealFor: Nullable;
   quantity: Nullable;
-  categoryId: Nullable;
+  category: string[] | null | undefined;
   images: string[] | null | undefined;
 }
 
@@ -38,7 +38,7 @@ interface UpdateProductRequest {
   type: Nullable;
   idealFor: Nullable;
   quantity: Nullable;
-  categoryId: Nullable;
+  category: string[] | null | undefined;
 }
 
 export async function addProductHandler(req: Request, res: Response) {
@@ -67,7 +67,7 @@ export async function addProductHandler(req: Request, res: Response) {
     return;
   }
 
-  const { images, ...data } = result.data;
+  const { images, category, ...data } = result.data;
 
   try {
     const result = await prisma.product.create({
@@ -75,6 +75,9 @@ export async function addProductHandler(req: Request, res: Response) {
         ...data,
         images: {
           connect: images?.map((e) => ({ id: e })),
+        },
+        productOnCategories: {
+          create: [...category.map((e) => ({ categoryId: e }))],
         },
       },
     });
@@ -139,6 +142,7 @@ export async function getProductByIdHandler(req: Request, res: Response) {
       },
       include: {
         images: true,
+        productOnCategories: true,
       },
     });
 
@@ -151,7 +155,10 @@ export async function getProductByIdHandler(req: Request, res: Response) {
 
     res.json({
       msg: "Product fetched",
-      data,
+      data: {
+        ...data,
+        category: data.productOnCategories.map((e) => e.categoryId),
+      },
     });
   } catch (error) {
     console.log(error);
@@ -186,7 +193,7 @@ export async function changeProductStatus(
   }
 
   try {
-    const boolStatus = Boolean(status);
+    const boolStatus = status === "true";
     const product = await prisma.product.findUnique({
       where: {
         id,
@@ -242,13 +249,23 @@ export async function updateProductHandler(req: Request, res: Response) {
     return;
   }
 
-  const { id, ...data } = result.data;
+  const { id, category, ...data } = result.data;
   try {
     const product = await prisma.product.findUnique({
       where: {
         id,
       },
+      include: {
+        productOnCategories: true,
+      },
     });
+
+    if (!product) {
+      res.status(400).json({
+        msg: "Product not found",
+      });
+      return;
+    }
 
     await prisma.product.update({
       where: {
@@ -256,6 +273,17 @@ export async function updateProductHandler(req: Request, res: Response) {
       },
       data: {
         ...data,
+        productOnCategories: {
+          delete: [
+            ...product.productOnCategories.map((e) => ({
+              productId_categoryId: {
+                categoryId: e.categoryId,
+                productId: e.productId,
+              },
+            })),
+          ],
+          create: [...category.map((e) => ({ categoryId: e }))],
+        },
       },
     });
 

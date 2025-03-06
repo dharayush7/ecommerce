@@ -7,6 +7,7 @@ import adminManegerRouter from "@/routes/admin/maneger.routes";
 import adminProductRouter from "@/routes/admin/product.routes";
 import authRouter from "@/routes/auth.routes";
 import uploadRouter from "@/routes/admin/upload.routes";
+import adminCategotyRouter from "@/routes/admin/category.routes";
 
 async function init() {
   const app = express();
@@ -29,6 +30,7 @@ async function init() {
   app.use("/admin/auth", adminAuthRouter);
   app.use("/admin/maneger", adminManegerRouter);
   app.use("/admin/product", adminProductRouter);
+  app.use("/admin/category", adminCategotyRouter);
   app.use("/admin/upload", uploadRouter);
 
   app.use("/auth", authRouter);

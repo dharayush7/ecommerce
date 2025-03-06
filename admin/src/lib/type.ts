@@ -52,7 +52,7 @@ export interface ProductRequest {
   type: string;
   idealFor: string;
   quantity: string;
-  categoryId: string;
+  category: string[];
   images: string[];
 }
 
@@ -61,4 +61,20 @@ export interface Media {
   createdAt: Date;
   url: string;
   productId: string;
+}
+
+export interface Category {
+  name: string;
+  description: string;
+  id: string;
+}
+
+export interface UpdatedCategoryRequest {
+  name: string;
+  description: string;
+}
+
+export interface AddCategoryRequest {
+  name: string;
+  description: string;
 }

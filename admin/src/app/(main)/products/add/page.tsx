@@ -2,6 +2,7 @@ import React from "react";
 import AddProductForm from "./AddProductForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getCategories } from "./action";
 
 export default async function page() {
   const cookieStrore = await cookies();
@@ -11,6 +12,8 @@ export default async function page() {
   const isadmin = permission.value.split(",").includes("ADMIN");
   const isProduct = permission.value.split(",").includes("PRODUCT");
   const isAccess = isadmin || isProduct;
+
+  const categoryResponse = await getCategories();
   return (
     <main className="w-full h-full relative">
       {isAccess ? (
@@ -19,7 +22,7 @@ export default async function page() {
             <p className="text-4xl font-bold">Add Product</p>
           </div>
           <div className="p-6 w-full h-full">
-            <AddProductForm />
+            <AddProductForm categories={categoryResponse.data} />
           </div>
         </>
       ) : (

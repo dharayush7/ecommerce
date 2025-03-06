@@ -105,7 +105,7 @@ export const getProductByIdRequest = async ({
   productId: string;
 }) => {
   try {
-    const result = await axios.get(`${HOST}/admin/product/get${[productId]}`, {
+    const result = await axios.get(`${HOST}/admin/product/get/${[productId]}`, {
       headers: {
         Authorization: `token ${sessionId}`,
       },
@@ -115,6 +115,103 @@ export const getProductByIdRequest = async ({
     const e = error as AxiosError;
     if (e.response) {
       const res = e.response.data as GetProductByIdResponse;
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+export const updateProductMediaRequest = async ({
+  sessionId,
+  productId,
+  image,
+}: {
+  sessionId: string;
+  productId: string;
+  image: string[];
+}) => {
+  try {
+    const result = await axios.post(
+      `${HOST}/admin/product/update-media`,
+      {
+        productId,
+        image,
+      },
+      {
+        headers: {
+          Authorization: `token ${sessionId}`,
+        },
+      }
+    );
+    return result.data as { msg: string };
+  } catch (error) {
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as { msg: string };
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+export const updateProductRequest = async ({
+  sessionId,
+  productId,
+  data,
+}: {
+  sessionId: string;
+  productId: string;
+  data: Omit<ProductRequest, "images">;
+}) => {
+  try {
+    const result = await axios.post(
+      `${HOST}/admin/product/update`,
+      {
+        id: productId,
+        ...data,
+      },
+      {
+        headers: {
+          Authorization: `token ${sessionId}`,
+        },
+      }
+    );
+    return result.data as { msg: string };
+  } catch (error) {
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as { msg: string };
+      throw new Error(res.msg);
+    }
+    throw new Error("Unknown error occoured");
+  }
+};
+
+interface UpdateStatusRequestBody {
+  sessionId: string;
+  status: boolean;
+  productId: string;
+}
+
+export const updateStatusRequest = async ({
+  sessionId,
+  status,
+  productId,
+}: UpdateStatusRequestBody) => {
+  try {
+    const result = await axios.get(
+      `${HOST}/admin/product/change-status/${productId}?status=${status}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionId}`,
+        },
+      }
+    );
+    return result.data as { msg: string };
+  } catch (error) {
+    const e = error as AxiosError;
+    if (e.response) {
+      const res = e.response.data as { msg: string };
       throw new Error(res.msg);
     }
     throw new Error("Unknown error occoured");

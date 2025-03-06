@@ -4,12 +4,14 @@ import { FormEvent, useState, useTransition } from "react";
 import LoadingThemeButton from "@/components/LoadingThemeButton";
 import { Input } from "@/components/ui/input";
 import { login } from "./action";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const [err, setErr] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -36,6 +38,16 @@ const LoginForm = () => {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+      <div className="flex gap-2">
+        <p> Forget your</p>
+        <button
+          type="button"
+          className="text-blue-600 cursor-pointer"
+          onClick={() => router.push("/rest-password")}
+        >
+          password?
+        </button>
+      </div>
       <LoadingThemeButton className="py-3" isLoading={isPending}>
         Login
       </LoadingThemeButton>

@@ -101,38 +101,37 @@ model UserOTP {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  products    Product[]
+  id                  String                @id @default(cuid())
+  name                String
+  description         String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  productOnCategories ProductOnCategories[]
 
   @@map("category")
 }
 
 model Product {
-  id           String         @id @default(cuid())
-  name         String
-  description  String
-  description2 String
-  description3 String?
-  points       String[]
-  maxPrice     Float
-  sellPrice    Float
-  fragrence    String?
-  strength     String?
-  preference   String?
-  sustainable  String?
-  type         String?
-  idealFor     String?
-  quantity     Int?
-  isLive       Boolean        @default(false)
-  categoryId   String
-  category     Category       @relation(fields: [categoryId], references: [id])
-  images       ProductImage[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id                  String                @id @default(cuid())
+  name                String
+  description         String
+  description2        String
+  description3        String?
+  points              String[]
+  maxPrice            Float
+  sellPrice           Float
+  fragrence           String?
+  strength            String?
+  preference          String?
+  sustainable         String?
+  type                String?
+  idealFor            String?
+  quantity            Int?
+  isLive              Boolean               @default(false)
+  images              ProductImage[]
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  productOnCategories ProductOnCategories[]
 
   @@map("product")
 }
@@ -145,4 +144,14 @@ model ProductImage {
   product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   @@map("product_image")
+}
+
+model ProductOnCategories {
+  productId  String
+  categoryId String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@map("product_on_categories")
 }

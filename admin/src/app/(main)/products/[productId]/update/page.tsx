@@ -1,6 +1,6 @@
 import React from "react";
-import UpdateMedia from "./UpdateMedia";
-import { getProductbyId } from "./action";
+import { getCategories, getProductbyId } from "./action";
+import UpdateForm from "./UpdateForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -12,13 +12,6 @@ export default async function page(props: PageProps) {
   const params = await props.params;
   const productId = await params.productId;
   const result = await getProductbyId(productId);
-  if (result.err || !("images" in result.data)) {
-    return (
-      <main className="w-full h-full flex justify-center items-center">
-        <p className="text-3xl text-destructive font-semibold">{result.msg}</p>
-      </main>
-    );
-  }
   const cookieStrore = await cookies();
   const permission = cookieStrore.get("permission");
   if (!permission) redirect("/login");
@@ -27,25 +20,29 @@ export default async function page(props: PageProps) {
   const isProduct = permission.value.split(",").includes("PRODUCT");
   const isAccess = isadmin || isProduct;
 
+  if (result.err || !("images" in result.data)) {
+    return (
+      <main className="w-full h-full flex justify-center items-center">
+        <p className="text-3xl text-destructive font-semibold">{result.msg}</p>
+      </main>
+    );
+  }
+
+  const categoryResponse = await getCategories();
   return (
     <main className="w-full h-full relative">
       {isAccess ? (
         <>
           <div className="flex justify-center items-center pt-6">
-            <p className="text-4xl font-bold">Update Images</p>
+            <p className="text-4xl font-bold">Update Product</p>
           </div>
-          <div className="pl-3 pt-6 pb-6 space-x-2 text-lg">
-            <p>
-              <b>Name:</b> {result.data.name}
-            </p>
-            <p>
-              <b>Max Price:</b> {result.data.maxPrice}
-            </p>
-            <p>
-              <b>Sell Price:</b> {result.data.sellPrice}
-            </p>
+          <div className="p-6 w-full h-full">
+            <UpdateForm
+              data={result.data}
+              productId={productId}
+              categories={categoryResponse.data}
+            />
           </div>
-          <UpdateMedia oldMedia={result.data.images} productId={productId} />
         </>
       ) : (
         <div className="w-full h-full flex justify-center items-center">

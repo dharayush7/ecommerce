@@ -4,46 +4,38 @@ import { Minus, Plus, X } from "lucide-react";
 import { Input, TextArea } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Category, ProductRequest } from "@/lib/type";
-import MediaUpload from "./MediaUpload";
 import LoadingButton from "@/components/LoadingButton";
-import { addProduct } from "./action";
+import { updateProduct } from "./action";
 import { CategorySelection } from "./CategorySelectiom";
 
-export default function AddProductForm({
+export default function UpdateForm({
+  data,
+  productId,
   categories,
 }: {
+  data: Omit<ProductRequest, "images">;
+  productId: string;
   categories: Category[];
 }) {
-  const [pointInd, setPointInd] = useState(1);
-  const [pointCnt, setPointCnt] = useState<string[]>([""]);
-  const [formValue, setFormValue] = useState<ProductRequest>({
-    category: [],
-    description: "",
-    description2: "",
-    description3: "",
-    fragrence: "",
-    idealFor: "",
-    images: [],
-    maxPrice: "",
-    name: "",
-    points: [],
-    preference: "",
-    quantity: "",
-    sellPrice: "",
-    strength: "",
-    sustainable: "",
-    type: "",
-  });
-  const [isUploading, setIsUploading] = useState(false);
-  const [err, setErr] = useState("");
+  const [pointInd, setPointInd] = useState(data.points.length);
+  const [pointCnt, setPointCnt] = useState<string[]>([...data.points]);
+  const [formValue, setFormValue] =
+    useState<Omit<ProductRequest, "images">>(data);
   const [category, setCatagory] = useState<string>("");
-  const [currentCategories, setCurrentCategoies] = useState(categories);
+  const [currentCategories, setCurrentCategoies] = useState([
+    ...categories.filter((e) => !formValue.category.includes(e.id)),
+  ]);
+  const [err, setErr] = useState("");
   const [isPending, startTansition] = useTransition();
 
   useEffect(() => {
     setFormValue({ ...formValue, points: pointCnt });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointCnt]);
+
+  useEffect(() => {
+    console.log(formValue);
+  }, [formValue]);
 
   const inpFields = [
     {
@@ -181,6 +173,14 @@ export default function AddProductForm({
     setPointCnt(arr);
   };
 
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    startTansition(async () => {
+      const err = await updateProduct({ productId, values: formValue });
+      if (err) setErr(err);
+    });
+  };
+
   const onAddCategory = () => {
     if (category.length == 0) return;
     setCurrentCategoies([
@@ -201,14 +201,6 @@ export default function AddProductForm({
     }
   };
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    startTansition(async () => {
-      const err = await addProduct(formValue);
-      if (err) setErr(err.msg);
-    });
-  };
-
   function range(end: number) {
     const ans = [];
     for (let i = 0; i < end; i++) {
@@ -216,10 +208,6 @@ export default function AddProductForm({
     }
     return ans;
   }
-
-  const setImage = (id: string[]) => {
-    setFormValue({ ...formValue, images: id });
-  };
 
   return (
     <div>
@@ -244,7 +232,7 @@ export default function AddProductForm({
           ))}
         </div>
         <div className="flex justify-evenly w-full">
-          <div className="w-full space-y-1 px-2 mt-3">
+          <div className="w-1/2 space-y-1 px-2 mt-3">
             <p className="text-lg">Points</p>
             <Button
               variant="outline"
@@ -283,7 +271,7 @@ export default function AddProductForm({
               </Button>
             </div>
             <div className="flex flex-wrap gap-1">
-              {formValue.category.map((cat, i) => {
+              {formValue.category?.map((cat, i) => {
                 const r = categories.find((e) => e.id == cat);
                 return (
                   <div
@@ -305,17 +293,9 @@ export default function AddProductForm({
             </div>
           </div>
         </div>
-        <div className="pt-3">
-          <p className="text-lg font-bold pb-2">Upload Images</p>
-          <MediaUpload setImage={setImage} setIsUploading={setIsUploading} />
-        </div>
         <div className="w-full flex justify-end items-center">
-          <LoadingButton
-            type="submit"
-            disabled={isUploading}
-            isLoading={isPending}
-          >
-            Add Product
+          <LoadingButton type="submit" isLoading={isPending}>
+            Save changes
           </LoadingButton>
         </div>
       </form>

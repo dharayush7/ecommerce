@@ -69,7 +69,7 @@ export const addProductSchema = z.object({
   type: z.string().optional(),
   idealFor: z.string().optional(),
   quantity: z.number().optional(),
-  categoryId: z.string().min(1, "Category ID is required"),
+  category: z.array(z.string()),
   images: z.array(z.string()).optional(),
 });
 
@@ -89,5 +89,16 @@ export const updateProductSchema = z.object({
   type: z.string().optional(),
   idealFor: z.string().optional(),
   quantity: z.number().optional(),
-  categoryId: z.string().min(1, "Category ID is required"),
+  category: z.array(z.string()),
+});
+
+export const createCategorySchema = z.object({
+  name: z.string().min(3, "Name should be at least 3 charecters"),
+  desc: z.string(),
+});
+
+export const updateCategorySchema = z.object({
+  id: z.string().min(3, "Id should not be undefined"),
+  name: z.string().min(3, "Name should be at least 3 charecters"),
+  desc: z.string(),
 });
