@@ -4,6 +4,7 @@ import Products from "./Products";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import ClearUploadButton from "./ClearUploadButton";
 
 async function page() {
   const cookieStrore = await cookies();
@@ -19,9 +20,12 @@ async function page() {
         <div className="p-6 w-full h-full">
           <div className="flex justify-between items-center">
             <p className="text-4xl font-bold">Products</p>
-            <Button className="cursor-pointer">
-              <Link href="/products/add">Add product</Link>
-            </Button>
+            <div className="flex w-fit space-x-2 items-center">
+              <ClearUploadButton />
+              <Button className="cursor-pointer">
+                <Link href="/products/add">Add product</Link>
+              </Button>
+            </div>
           </div>
           <Products />
         </div>

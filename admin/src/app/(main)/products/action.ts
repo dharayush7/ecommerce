@@ -53,3 +53,10 @@ export const updateStatus = async ({
     return String(error);
   }
 };
+
+export const clearUpload = async () => {
+  const result = await fetch("http://localhost:3000/api/clear-uploads", {
+    method: "GET",
+  });
+  console.log(result);
+};

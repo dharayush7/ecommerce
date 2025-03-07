@@ -6,7 +6,6 @@ import { Request, Response } from "express";
 
 export async function loginHandler(req: Request, res: Response) {
   const mobileNo = req.body.mobileNo as Nullable;
-  console.log(mobileNo);
   let result;
   try {
     result = userLoginSchema.safeParse({ mobileNo: Number(mobileNo) });
@@ -109,7 +108,11 @@ export async function userVerificationHandler(req: Request, res: Response) {
         id: data.userId,
       },
       include: {
-        userOTP: true,
+        userOTP: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
     if (!user || user.userOTP.length == 0) {
@@ -118,12 +121,7 @@ export async function userVerificationHandler(req: Request, res: Response) {
       });
       return;
     }
-    const otps = user.userOTP.sort((a, b) => {
-      if (a.createdAt > b.createdAt) return 1;
-      if (a.createdAt < b.createdAt) return -1;
-
-      return 0;
-    });
+    const otps = user.userOTP;
 
     if (otps[0].code != data.otpCode) {
       res.status(400).json({

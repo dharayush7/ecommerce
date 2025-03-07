@@ -1,32 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { Media, ProductRequest } from "@/lib/type";
 
-interface UploadRequest {
-  url: string;
-}
-
 const HOST = process.env.SERVER_HOST!;
-
-interface UploadResponse {
-  data: {
-    mediaId: string;
-  };
-  msg: string;
-}
-
-export const uploadRequest = async ({ url }: UploadRequest) => {
-  try {
-    const result = await axios.post(`${HOST}/admin/upload`, { url });
-    return result.data as UploadResponse;
-  } catch (error) {
-    const e = error as AxiosError;
-    if (e.response) {
-      const res = e.response.data as UploadResponse;
-      throw new Error(res.msg);
-    }
-    throw new Error("Unknown error occoured");
-  }
-};
 
 interface AddProductRequestBody extends ProductRequest {
   sessionId: string;

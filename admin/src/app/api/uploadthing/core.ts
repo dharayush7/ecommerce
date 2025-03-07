@@ -1,6 +1,6 @@
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { uploadRequest } from "@/services/product";
+import { uploadRequest } from "@/services/upload";
 
 const f = createUploadthing();
 export const fileRouter = {

@@ -30,6 +30,32 @@ Mobile No.: 1234567890
 Password: ******
 ```
 
+## Clear Upload Script
+
+The `clearupload.js` script is used to delete unused media files from the bucket.
+
+### Usage
+
+Run the script using Node.js:
+
+```bash
+npm run clear-upload
+```
+
+### Description
+
+This script fetches media files from the bucket and the database, compares them, and deletes the unused media files from the bucket.
+
+### Example
+
+```bash
+Fetching medias in bucket...
+Fetching medias in database...
+Sorting medias...
+Deleting medias...
+Unused media file deleted.
+```
+
 ## API Endpoints
 
 ### Admin Authentication Routes
@@ -388,7 +414,7 @@ Body:
   "type": "Perfume",
   "idealFor": "Everyone",
   "quantity": 50,
-  "categoryId": "category-id",
+  "category": ["category-id"],
   "images": ["image-id-1", "image-id-2"]
 }
 ```
@@ -414,7 +440,7 @@ Body:
     "type": "Perfume",
     "idealFor": "Everyone",
     "quantity": 50,
-    "categoryId": "category-id",
+    "category": ["category-id"],
     "images": ["image-id-1", "image-id-2"]
   }
 }
@@ -454,7 +480,7 @@ Headers:
       "type": "Perfume",
       "idealFor": "Everyone",
       "quantity": 50,
-      "categoryId": "category-id",
+      "category": ["category-id"],
       "images": ["image-id-1", "image-id-2"]
     }
   ]
@@ -494,7 +520,7 @@ Headers:
     "type": "Perfume",
     "idealFor": "Everyone",
     "quantity": 50,
-    "categoryId": "category-id",
+    "category": ["category-id"],
     "images": ["image-id-1", "image-id-2"]
   }
 }
@@ -559,7 +585,7 @@ Body:
   "type": "Cologne",
   "idealFor": "Men",
   "quantity": 100,
-  "categoryId": "updated-category-id"
+  "category": ["updated-category-id"]
 }
 ```
 
@@ -600,7 +626,11 @@ Body:
 }
 ```
 
-#### POST /admin/product/upload
+### Admin Category Routes
+
+These routes are protected by the `adminMiddleware`.
+
+#### POST /admin/category/create
 
 **Request:**
 
@@ -609,6 +639,99 @@ Headers:
 ```json
 {
   "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "name": "New Category",
+  "desc": "Category description"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "category created sucessfully"
+}
+```
+
+#### POST /admin/category/update
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "id": "category-id",
+  "name": "Updated Category",
+  "desc": "Updated description"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "category updated sucessfully"
+}
+```
+
+#### GET /admin/category/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Categories fetched",
+  "data": [
+    {
+      "id": "category-id",
+      "name": "Category Name",
+      "description": "Category description",
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z",
+      "count": 10
+    }
+  ]
+}
+```
+
+### Admin Upload Routes
+
+These routes are protected by the `uploadMiddleware`.
+
+#### POST /admin/upload
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer upload-token"
 }
 ```
 
@@ -628,6 +751,47 @@ Body:
   "data": {
     "mediaId": "media-id"
   }
+}
+```
+
+#### GET /admin/upload/unused/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer upload-token"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Unused media fetched",
+  "date": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
+}
+```
+
+#### GET /admin/upload/unused/delete
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer upload-token"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Deleted"
 }
 ```
 
