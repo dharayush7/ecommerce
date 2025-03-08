@@ -67,14 +67,17 @@ export interface Category {
   name: string;
   description: string;
   id: string;
+  isTag: boolean;
 }
 
 export interface UpdatedCategoryRequest {
   name: string;
   description: string;
+  isTag: boolean;
 }
 
 export interface AddCategoryRequest {
   name: string;
   description: string;
+  isTag: boolean;
 }

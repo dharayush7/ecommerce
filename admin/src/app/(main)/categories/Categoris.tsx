@@ -20,6 +20,7 @@ import {
 import { Category } from "@/lib/type";
 import UpdateCategory from "./UpdateCategory";
 import { getCategories } from "./action";
+import { Badge } from "@/components/ui/badge";
 
 interface CategoryResponsse extends Category {
   count: number;
@@ -107,7 +108,9 @@ export function DataTable({ categoris }: { categoris: CategoryResponsse[] }) {
           <TableBody>
             {categoris.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{row.name}</TableCell>
+                <TableCell className="space-x-2">
+                  {row.name} {row.isTag && <Badge>Tag</Badge>}{" "}
+                </TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.count}</TableCell>
                 <TableCell>

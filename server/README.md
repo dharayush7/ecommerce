@@ -647,7 +647,8 @@ Body:
 ```json
 {
   "name": "New Category",
-  "desc": "Category description"
+  "desc": "Category description",
+  "isTag": true
 }
 ```
 
@@ -677,7 +678,8 @@ Body:
 {
   "id": "category-id",
   "name": "Updated Category",
-  "desc": "Updated description"
+  "desc": "Updated description",
+  "isTag": true
 }
 ```
 
@@ -711,6 +713,7 @@ Headers:
       "id": "category-id",
       "name": "Category Name",
       "description": "Category description",
+      "isTag": true,
       "createdAt": "2023-10-01T00:00:00.000Z",
       "updatedAt": "2023-10-01T00:00:00.000Z",
       "count": 10

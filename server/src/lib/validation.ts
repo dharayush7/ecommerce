@@ -95,10 +95,12 @@ export const updateProductSchema = z.object({
 export const createCategorySchema = z.object({
   name: z.string().min(3, "Name should be at least 3 charecters"),
   desc: z.string(),
+  isTag: z.boolean(),
 });
 
 export const updateCategorySchema = z.object({
   id: z.string().min(3, "Id should not be undefined"),
   name: z.string().min(3, "Name should be at least 3 charecters"),
   desc: z.string(),
+  isTag: z.boolean(),
 });

@@ -7,6 +7,7 @@ export async function createCategory(req: Request, res: Response) {
   const user = req.admin;
   const name = req.body.name as Nullable;
   const desc = req.body.desc as Nullable;
+  const isTag = req.body.isTag as boolean | null | undefined;
   if (
     !user.permission.includes("ADMIN") &&
     !user.permission.includes("PRODUCT")
@@ -17,7 +18,7 @@ export async function createCategory(req: Request, res: Response) {
     return;
   }
 
-  const result = createCategorySchema.safeParse({ name, desc });
+  const result = createCategorySchema.safeParse({ name, desc, isTag });
   if (!result.success) {
     res.status(400).json({
       msg: result.error.issues[0],
@@ -32,6 +33,7 @@ export async function createCategory(req: Request, res: Response) {
       data: {
         name: data.name,
         description: data.desc,
+        isTag: data.isTag,
       },
     });
     res.json({
@@ -50,6 +52,7 @@ export async function updateCategory(req: Request, res: Response) {
   const id = req.body.id as Nullable;
   const name = req.body.name as Nullable;
   const desc = req.body.desc as Nullable;
+  const isTag = req.body.isTag as boolean | null | undefined;
   if (
     !user.permission.includes("ADMIN") &&
     !user.permission.includes("PRODUCT")
@@ -60,7 +63,7 @@ export async function updateCategory(req: Request, res: Response) {
     return;
   }
 
-  const result = updateCategorySchema.safeParse({ name, desc, id });
+  const result = updateCategorySchema.safeParse({ name, desc, id, isTag });
   if (!result.success) {
     res.status(400).json({
       msg: result.error.issues[0],
@@ -90,6 +93,7 @@ export async function updateCategory(req: Request, res: Response) {
       data: {
         name: data.name,
         description: data.desc,
+        isTag: data.isTag,
       },
     });
     res.json({

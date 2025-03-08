@@ -34,10 +34,12 @@ export const addCategoryRequest = async ({
   sessionId,
   name,
   description,
+  isTag,
 }: {
   sessionId: string;
   name: string;
   description: string;
+  isTag: boolean;
 }) => {
   try {
     const result = await axios.post(
@@ -45,6 +47,7 @@ export const addCategoryRequest = async ({
       {
         desc: description,
         name,
+        isTag,
       },
       {
         headers: {
@@ -68,11 +71,13 @@ export const updateCategoryRequest = async ({
   name,
   description,
   categoryId,
+  isTag,
 }: {
   sessionId: string;
   name: string;
   description: string;
   categoryId: string;
+  isTag: boolean;
 }) => {
   try {
     const result = await axios.post(
@@ -81,6 +86,7 @@ export const updateCategoryRequest = async ({
         id: categoryId,
         desc: description,
         name,
+        isTag,
       },
       {
         headers: {

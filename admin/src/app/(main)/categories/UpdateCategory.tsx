@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import LoadingButton from "@/components/LoadingButton";
 import { Category, UpdatedCategoryRequest } from "@/lib/type";
 import { updateCategory } from "./action";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function UpdateCategory({
   isOpen,
@@ -26,13 +27,18 @@ function UpdateCategory({
   const [formValue, setFormValue] = useState<UpdatedCategoryRequest>({
     name: "",
     description: "",
+    isTag: false,
   });
   const [err, setErr] = useState("");
   const [isLoading, startTransition] = useTransition();
 
   useEffect(() => {
     if (category) {
-      setFormValue({ name: category.name, description: category.description });
+      setFormValue({
+        name: category.name,
+        description: category.description,
+        isTag: category.isTag,
+      });
     }
   }, [category]);
 
@@ -50,7 +56,7 @@ function UpdateCategory({
   const onClose = async () => {
     if (!isLoading) {
       setErr("");
-      setFormValue({ description: "", name: "" });
+      setFormValue({ description: "", name: "", isTag: false });
       setIsOpen(false);
     }
   };
@@ -104,6 +110,17 @@ function UpdateCategory({
                 }
                 required
               />
+            </div>
+            <div className="space-x-2">
+              <Checkbox
+                id="isTag"
+                className="rounded-none border border-primary"
+                checked={formValue.isTag}
+                onCheckedChange={(e) =>
+                  setFormValue({ ...formValue, isTag: Boolean(e) })
+                }
+              />
+              <label htmlFor="isTag">Tag</label>
             </div>
           </div>
           <div className="w-full flex justify-end items-center pt-4">

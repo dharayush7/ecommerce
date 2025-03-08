@@ -14,11 +14,13 @@ import { Label } from "@/components/ui/label";
 import LoadingButton from "@/components/LoadingButton";
 import { AddCategoryRequest } from "@/lib/type";
 import { addCategory } from "./action";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function AddCategory() {
   const defaultFormValue: AddCategoryRequest = {
     name: "",
     description: "",
+    isTag: false,
   };
   const [isOpen, setIsOpen] = useState(false);
   const [formValue, setFormValue] =
@@ -99,6 +101,17 @@ function AddCategory() {
                 }
                 required
               />
+            </div>
+            <div className="space-x-2">
+              <Checkbox
+                id="isTag"
+                className="rounded-none border border-primary"
+                checked={formValue.isTag}
+                onCheckedChange={(e) =>
+                  setFormValue({ ...formValue, isTag: Boolean(e) })
+                }
+              />
+              <label htmlFor="isTag">Tag</label>
             </div>
           </div>
 

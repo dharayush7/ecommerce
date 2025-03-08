@@ -40,12 +40,18 @@ export const getCategories = async () => {
 export const addCategory = async ({
   name,
   description,
+  isTag,
 }: AddCategoryRequest) => {
   try {
     const cookieStore = await cookies();
     const auth = cookieStore.get("auth");
     if (!auth) redirect("/login");
-    await addCategoryRequest({ sessionId: auth.value, name, description });
+    await addCategoryRequest({
+      sessionId: auth.value,
+      name,
+      description,
+      isTag,
+    });
     redirect("/categories");
   } catch (error) {
     if (isRedirectError(error)) throw error;
@@ -64,6 +70,7 @@ export const updateCategory = async ({
   categoryId,
   description,
   name,
+  isTag,
 }: AddCategoryRequest & { categoryId: string }) => {
   try {
     const cookieStore = await cookies();
@@ -74,6 +81,7 @@ export const updateCategory = async ({
       categoryId,
       description,
       name,
+      isTag,
     });
     redirect("/categories");
   } catch (error) {
