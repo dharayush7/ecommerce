@@ -827,6 +827,24 @@ Headers:
 }
 ```
 
+#### POST /auth/resend
+
+**Request:**
+
+```json
+{
+  "userId": "user-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "OTP send"
+}
+```
+
 #### POST /auth/verify
 
 **Request:**
@@ -844,5 +862,78 @@ Headers:
 {
   "sessionId": "session-id",
   "msg": "Logged in successful"
+}
+```
+
+### Product Routes
+
+#### GET /product/get
+
+**Request:**
+
+**Response:**
+
+```json
+{
+  "msg": "Product fetched",
+  "data": [
+    {
+      "name": "Product Name",
+      "sellPrice": 80.0,
+      "maxPrice": 100.0,
+      "categories": [
+        {
+          "id": "category-id",
+          "name": "Category Name"
+        }
+      ],
+      "tags": [
+        {
+          "id": "tag-id",
+          "name": "Tag Name"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Category Routes
+
+#### GET /category/get
+
+**Request:**
+
+**Response:**
+
+```json
+{
+  "msg": "Categories fetched",
+  "data": [
+    {
+      "id": "category-id",
+      "name": "Category Name"
+    }
+  ]
+}
+```
+
+### Tag Routes
+
+#### GET /tag/get
+
+**Request:**
+
+**Response:**
+
+```json
+{
+  "msg": "Tag fetched",
+  "data": [
+    {
+      "id": "tag-id",
+      "name": "Tag Name"
+    }
+  ]
 }
 ```

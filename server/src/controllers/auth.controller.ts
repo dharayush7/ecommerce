@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { userLoginSchema, userVerificationSchema } from "@/lib/validation";
 import { Nullable } from "@/types";
 import { Request, Response } from "express";
+import { z } from "zod";
 
 export async function loginHandler(req: Request, res: Response) {
   const mobileNo = req.body.mobileNo as Nullable;
@@ -66,6 +67,58 @@ export async function loginHandler(req: Request, res: Response) {
     res.json({
       msg: "Otp sent successfully",
       userId: newUser.id,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function resendHandler(req: Request, res: Response) {
+  const userId = req.body.userId as Nullable;
+  try {
+    const result = z.string().safeParse(userId);
+    if (!result.success) {
+      res.status(400).json({
+        msg: result.error.issues[0].message,
+      });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: result.data,
+      },
+      include: {
+        userOTP: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      res.status(400).json({
+        msg: "User not found",
+      });
+      return;
+    }
+
+    if (user.userOTP.length === 0) {
+      res.status(401).json({
+        msg: "OTP not generated",
+      });
+      return;
+    }
+
+    console.log({ userOtp: user.userOTP[0].code });
+    // NOTE: OTP sending pending
+
+    res.json({
+      msg: "OTP send",
     });
   } catch (error) {
     console.log(error);

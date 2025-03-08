@@ -5,9 +5,12 @@ import cors from "cors";
 import adminAuthRouter from "@/routes/admin/auth.routes";
 import adminManegerRouter from "@/routes/admin/maneger.routes";
 import adminProductRouter from "@/routes/admin/product.routes";
-import authRouter from "@/routes/auth.routes";
 import uploadRouter from "@/routes/admin/upload.routes";
 import adminCategotyRouter from "@/routes/admin/category.routes";
+import authRouter from "@/routes/auth.routes";
+import productRouter from "@/routes/product.routes";
+import categoryRouter from "@/routes/category.routes";
+import tagRouter from "@/routes/tag.routes";
 
 async function init() {
   const app = express();
@@ -34,6 +37,9 @@ async function init() {
   app.use("/admin/upload", uploadRouter);
 
   app.use("/auth", authRouter);
+  app.use("/product", productRouter);
+  app.use("/category", categoryRouter);
+  app.use("/tag", tagRouter);
 
   app.listen(PORT, () => {
     console.log(`Server started at port:${PORT}`);
