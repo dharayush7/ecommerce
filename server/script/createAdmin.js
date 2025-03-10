@@ -36,7 +36,6 @@ async function create(name, email, mobileNo, password) {
         email,
         password: hash,
         isOwner: true,
-        isRequreChange: false,
         mobileNo,
         permission: ["ADMIN"],
       },

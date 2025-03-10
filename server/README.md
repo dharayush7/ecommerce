@@ -814,6 +814,7 @@ Headers:
 
 ```json
 {
+  "uid": "hEctsZMga5aoYq5zBIhbu8uu6uQ2",
   "mobileNo": "1234567890"
 }
 ```
@@ -822,46 +823,8 @@ Headers:
 
 ```json
 {
-  "msg": "Otp sent successfully",
+  "msg": "Authenticate",
   "userId": "user-id"
-}
-```
-
-#### POST /auth/resend
-
-**Request:**
-
-```json
-{
-  "userId": "user-id"
-}
-```
-
-**Response:**
-
-```json
-{
-  "msg": "OTP send"
-}
-```
-
-#### POST /auth/verify
-
-**Request:**
-
-```json
-{
-  "otpCode": "123456",
-  "userId": "user-id"
-}
-```
-
-**Response:**
-
-```json
-{
-  "sessionId": "session-id",
-  "msg": "Logged in successful"
 }
 ```
 

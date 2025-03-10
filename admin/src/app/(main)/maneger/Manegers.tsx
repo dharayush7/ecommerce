@@ -137,13 +137,15 @@ export function DataTable({ manegers }: { manegers: Manager[] }) {
                   ))}
                 </TableCell>
                 <TableCell>
-                  <MoreOption
-                    setUpdatePermissionForm={setUpdatePermissionForm}
-                    setUpdateDetailsForm={setUpdateDetailsForm}
-                    setIsDeleteDialog={setIsDeleteDialog}
-                    maneger={row}
-                    setManeger={setManeger}
-                  />
+                  {!row.isOwner && !row.permission.includes("ADMIN") && (
+                    <MoreOption
+                      setUpdatePermissionForm={setUpdatePermissionForm}
+                      setUpdateDetailsForm={setUpdateDetailsForm}
+                      setIsDeleteDialog={setIsDeleteDialog}
+                      maneger={row}
+                      setManeger={setManeger}
+                    />
+                  )}
                 </TableCell>
               </TableRow>
             ))}
