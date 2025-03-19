@@ -841,6 +841,7 @@ Headers:
   "msg": "Product fetched",
   "data": [
     {
+      "id": "peoduct-id",
       "name": "Product Name",
       "sellPrice": 80.0,
       "maxPrice": 100.0,
@@ -900,3 +901,152 @@ Headers:
   ]
 }
 ```
+
+### Cart Routes
+
+#### POST /cart/add/
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "productId": "product-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart updated"
+}
+```
+
+#### GET /cart/get/
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart fetched",
+  "data": [
+    {
+      "productId": "product-id",
+      "quantity": 2,
+      "product": {
+        "name": "Product Name"
+      }
+    }
+  ]
+}
+```
+
+#### GET /cart/increase/
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "id": "product-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart update"
+}
+```
+
+#### GET /cart/decrease/
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "id": "product-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart update"
+}
+```
+
+#### POST /cart/remove/
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "productId": "product-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart update"
+}
+```
+
+#### User Middleware
+
+- **File:** `src/middleware/user.middleware.ts`
+- **Description:** Middleware to protect user routes.
+- **Function:** Checks if the request has a valid uid and sets the `req.user` object with user details.

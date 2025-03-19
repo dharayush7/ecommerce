@@ -22,6 +22,7 @@ import { Manager } from "@/lib/type";
 import UpdateManeger from "./UpdateManeger";
 import UpdatePermission from "./UpdatePermission";
 import AlertDialog from "@/components/AlertDialog";
+import { Badge } from "@/components/ui/badge";
 
 function Manegers() {
   const [manegers, setManegers] = useState<Manager[]>([]);
@@ -129,7 +130,9 @@ export function DataTable({ manegers }: { manegers: Manager[] }) {
           <TableBody>
             {manegers.map((row) => (
               <TableRow key={row.email}>
-                <TableCell>{row.name}</TableCell>
+                <TableCell className="space-x-2">
+                  {row.name} {row.isOwner && <Badge>Owner</Badge>}
+                </TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell className="space-x-2">
                   {row.permission.map((item) => (

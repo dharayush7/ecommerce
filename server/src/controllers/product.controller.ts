@@ -3,6 +3,7 @@ import { Category } from "prisma/prisma-client";
 import { Request, Response } from "express";
 
 interface GetProduct {
+  id: string;
   name: string;
   sellPrice: number;
   maxPrice: number;
@@ -40,11 +41,12 @@ export async function getProducthandler(req: Request, res: Response) {
       });
 
       resBody.push({
+        id: prd.id,
         name: prd.name,
         sellPrice: prd.sellPrice,
         maxPrice: prd.maxPrice,
-        categories: categories,
-        tags: tags,
+        tags: categories,
+        categories: tags,
       });
     });
 

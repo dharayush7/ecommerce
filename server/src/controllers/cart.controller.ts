@@ -1,0 +1,239 @@
+import prisma from "@/lib/prisma";
+import { Nullable } from "@/types";
+import { Request, Response } from "express";
+
+export async function addProductToCart(req: Request, res: Response) {
+  const user = req.user;
+  const productId = req.body.productId as Nullable;
+
+  if (!productId) {
+    res.status(400).json({
+      msg: "Product Id is empty",
+    });
+    return;
+  }
+
+  try {
+    const product = prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!product) {
+      res.status(400).json({
+        msg: "Product not found",
+      });
+      return;
+    }
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        productOnCarts: {
+          create: [{ productId, quantity: 1 }],
+        },
+      },
+    });
+    res.json({
+      msg: "Cart updated",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function getCartHandler(req: Request, res: Response) {
+  const user = req.user;
+  try {
+    const data = await prisma.productOnCarts.findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        productId: true,
+        quantity: true,
+        product: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    res.json({
+      msg: "Cart fetched",
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function incrCount(req: Request, res: Response) {
+  const user = req.user;
+  const productId = req.query.id as Nullable;
+
+  if (!productId) {
+    res.status(400).json({
+      msg: "Product Id is empty",
+    });
+    return;
+  }
+
+  try {
+    const cart = await prisma.productOnCarts.findFirst({
+      where: {
+        userId: {
+          equals: user.id,
+        },
+        productId: {
+          equals: productId,
+        },
+      },
+    });
+
+    if (!cart) {
+      res.status(400).json({
+        msg: "Cart not found",
+      });
+      return;
+    }
+
+    await prisma.productOnCarts.update({
+      where: {
+        userId_productId: {
+          userId: user.id,
+          productId: productId,
+        },
+      },
+      data: {
+        quantity: cart.quantity + 1,
+      },
+    });
+
+    res.json({
+      msg: "Cart updated",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function decrCount(req: Request, res: Response) {
+  const user = req.user;
+  const productId = req.query.id as Nullable;
+
+  if (!productId) {
+    res.status(400).json({
+      msg: "Product Id is empty",
+    });
+    return;
+  }
+
+  try {
+    const cart = await prisma.productOnCarts.findFirst({
+      where: {
+        userId: {
+          equals: user.id,
+        },
+        productId: {
+          equals: productId,
+        },
+      },
+    });
+
+    if (!cart) {
+      res.status(400).json({
+        msg: "Cart not found",
+      });
+      return;
+    }
+
+    if (cart.quantity == 1) {
+      res.status(400).json({
+        msg: "Item is minimum limit",
+      });
+      return;
+    }
+
+    await prisma.productOnCarts.update({
+      where: {
+        userId_productId: {
+          userId: user.id,
+          productId: productId,
+        },
+      },
+      data: {
+        quantity: cart.quantity - 1,
+      },
+    });
+
+    res.json({
+      msg: "Cart updated",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function removeProductHandler(req: Request, res: Response) {
+  const user = req.user;
+  const productId = req.body.productId as Nullable;
+
+  if (!productId) {
+    res.status(400).json({
+      msg: "Product id is empty",
+    });
+    return;
+  }
+
+  try {
+    const cart = await prisma.productOnCarts.findUnique({
+      where: {
+        userId_productId: {
+          userId: user.id,
+          productId,
+        },
+      },
+    });
+
+    if (!cart) {
+      res.status(400).json({
+        msg: "Product not found",
+      });
+      return;
+    }
+
+    await prisma.productOnCarts.delete({
+      where: {
+        userId_productId: {
+          productId: cart.productId,
+          userId: cart.userId,
+        },
+      },
+    });
+
+    res.json({
+      msg: "Item removed from the cart",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}

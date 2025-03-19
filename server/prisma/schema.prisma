@@ -67,14 +67,15 @@ model AdminSession {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  uid             String   @unique
-  mobileNo        String   @unique
-  name            String   @default("user")
-  email           String?  @unique
-  isEmailVerified Boolean  @default(false)
-  blocked         Boolean  @default(false)
-  createdAt       DateTime @default(now())
+  id              String           @id @default(cuid())
+  uid             String           @unique
+  mobileNo        String           @unique
+  name            String           @default("user")
+  email           String?          @unique
+  isEmailVerified Boolean          @default(false)
+  blocked         Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  productOnCarts  ProductOnCarts[]
 
   @@map("user")
 }
@@ -112,6 +113,7 @@ model Product {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   productOnCategories ProductOnCategories[]
+  productOnCart       ProductOnCarts[]
 
   @@map("product")
 }
@@ -134,4 +136,15 @@ model ProductOnCategories {
 
   @@id([productId, categoryId])
   @@map("product_on_categories")
+}
+
+model ProductOnCarts {
+  userId    String
+  productId String
+  quantity  Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@map("product_on_carts")
 }

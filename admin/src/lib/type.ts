@@ -81,3 +81,10 @@ export interface AddCategoryRequest {
   description: string;
   isTag: boolean;
 }
+
+export interface User {
+  name: string;
+  mobileNo: string;
+  email: string | null;
+  isEmailVerified: boolean;
+}

@@ -1,4 +1,11 @@
-import { Home, Search, Users, LogOut, Boxes, LayoutGrid } from "lucide-react";
+import {
+  Home,
+  User,
+  LogOut,
+  Boxes,
+  LayoutGrid,
+  Users2Icon,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -28,14 +35,14 @@ const items = [
     icon: LayoutGrid,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Users",
+    url: "/users",
+    icon: Users2Icon,
   },
   {
     title: "Maneger",
     url: "/maneger",
-    icon: Users,
+    icon: User,
   },
   {
     title: "Logout",
