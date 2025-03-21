@@ -12,6 +12,7 @@ import productRouter from "@/routes/product.routes";
 import categoryRouter from "@/routes/category.routes";
 import tagRouter from "@/routes/tag.routes";
 import cartRouter from "@/routes/cart.routes";
+import profileRouter from "@/routes/profile.routes";
 
 async function init() {
   const app = express();
@@ -38,6 +39,7 @@ async function init() {
   app.use("/admin/upload", uploadRouter);
 
   app.use("/auth", authRouter);
+  app.use("/profile", profileRouter);
   app.use("/product", productRouter);
   app.use("/category", categoryRouter);
   app.use("/tag", tagRouter);

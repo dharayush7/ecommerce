@@ -828,6 +828,66 @@ Headers:
 }
 ```
 
+### Profile Routes
+
+#### GET /profile/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+**Response**
+
+```json
+{
+  "msg": "User fetched",
+  "data": {
+    "mobileNo": "mobile-number",
+    "name": "user-name",
+    "email": "user-email"
+  }
+}
+```
+
+#### POST /profile/update
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "msg": "profile updated"
+}
+```
+
+**Response**
+
+```json
+{
+  "msg": "User fetched",
+  "data": {
+    "mobileNo": "mobile-number",
+    "name": "user-name",
+    "email": "user-email"
+  }
+}
+```
+
 ### Product Routes
 
 #### GET /product/get
@@ -920,7 +980,8 @@ Body:
 
 ```json
 {
-  "productId": "product-id"
+  "productId": "product-id",
+  "qyt": 3
 }
 ```
 

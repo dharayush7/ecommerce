@@ -5,10 +5,11 @@ import { Request, Response } from "express";
 export async function addProductToCart(req: Request, res: Response) {
   const user = req.user;
   const productId = req.body.productId as Nullable;
+  const qyt = req.body.qyt as number | null | undefined;
 
-  if (!productId) {
+  if (!productId || !qyt) {
     res.status(400).json({
-      msg: "Product Id is empty",
+      msg: "Product Id or qyt is empty",
     });
     return;
   }
@@ -32,7 +33,7 @@ export async function addProductToCart(req: Request, res: Response) {
       },
       data: {
         productOnCarts: {
-          create: [{ productId, quantity: 1 }],
+          create: [{ productId, quantity: qyt }],
         },
       },
     });
