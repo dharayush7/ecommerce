@@ -100,3 +100,11 @@ export const updateCategorySchema = z.object({
   desc: z.string(),
   isTag: z.boolean(),
 });
+
+export const addCarouselSchema = z.object({
+  imageId: z.string().min(3, "Inavlid image"),
+  isBlack: z.nullable(z.boolean()),
+  position: z.string(),
+  preference: z.string({ message: "Preference should be a number" }),
+  link: z.string(),
+});

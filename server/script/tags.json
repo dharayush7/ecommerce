@@ -1,0 +1,57 @@
+[
+  {
+    "id": "tag_bestseller",
+    "name": "Best Seller",
+    "description": "Top-selling perfume loved by customers."
+  },
+  {
+    "id": "tag_trending",
+    "name": "Trending Now",
+    "description": "Currently popular and in high demand."
+  },
+  {
+    "id": "tag_newarrival",
+    "name": "New Arrival",
+    "description": "Recently launched fragrance."
+  },
+  {
+    "id": "tag_gift",
+    "name": "Perfect Gift",
+    "description": "Ideal for gifting on special occasions."
+  },
+  {
+    "id": "tag_limited",
+    "name": "Limited Edition",
+    "description": "Exclusive, rare, or seasonal release."
+  },
+  {
+    "id": "tag_discount",
+    "name": "Discounted",
+    "description": "Currently on sale or special offer."
+  },
+  {
+    "id": "tag_luxury",
+    "name": "Luxury",
+    "description": "Premium, high-end fragrance."
+  },
+  {
+    "id": "tag_unisex",
+    "name": "Unisex",
+    "description": "Suitable for all genders."
+  },
+  {
+    "id": "tag_organic",
+    "name": "Organic",
+    "description": "Made with natural, eco-friendly ingredients."
+  },
+  {
+    "id": "tag_summer",
+    "name": "Summer Favorite",
+    "description": "Light and refreshing for warm weather."
+  },
+  {
+    "id": "tag_winter",
+    "name": "Winter Special",
+    "description": "Warm and cozy for cold months."
+  }
+]

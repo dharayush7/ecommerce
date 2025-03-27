@@ -58,6 +58,7 @@ export async function getCartHandler(req: Request, res: Response) {
       select: {
         productId: true,
         quantity: true,
+        isSaveForLater: true,
         product: {
           select: {
             name: true,
@@ -230,6 +231,58 @@ export async function removeProductHandler(req: Request, res: Response) {
 
     res.json({
       msg: "Item removed from the cart",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}
+
+export async function switchToLater(req: Request, res: Response) {
+  const user = req.user;
+  const productId = req.query.id as Nullable;
+
+  if (!productId) {
+    res.status(400).json({
+      msg: "Product id is empty",
+    });
+    return;
+  }
+  try {
+    const cart = await prisma.productOnCarts.findFirst({
+      where: {
+        userId: {
+          equals: user.id,
+        },
+        productId: {
+          equals: productId,
+        },
+      },
+    });
+
+    if (!cart) {
+      res.status(400).json({
+        msg: "Cart not found",
+      });
+      return;
+    }
+
+    await prisma.productOnCarts.update({
+      where: {
+        userId_productId: {
+          productId: productId,
+          userId: user.id,
+        },
+      },
+      data: {
+        isSaveForLater: !cart.isSaveForLater,
+      },
+    });
+
+    res.json({
+      msg: "Cart updated",
     });
   } catch (error) {
     console.log(error);

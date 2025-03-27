@@ -9,6 +9,7 @@ import prisma from "@/lib/prisma";
 import { comparePassword, hashPasword } from "@/lib/password";
 import { Nullable } from "@/types";
 import { checkExpiry } from "@/lib/function";
+import { sendMail } from "@/service/mail";
 
 export async function loginHandler(req: Request, res: Response) {
   try {
@@ -47,6 +48,7 @@ export async function loginHandler(req: Request, res: Response) {
     }
 
     const otpCode = Math.floor(100000 + Math.random() * 900000);
+    await sendMail(result.data.email, otpCode);
     console.log({ otpCode });
     await prisma.oTP.deleteMany({
       where: {
@@ -195,6 +197,13 @@ export async function resendOTPHandler(req: Request, res: Response) {
           equals: userId,
         },
       },
+      include: {
+        adminUser: {
+          select: {
+            email: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -208,6 +217,7 @@ export async function resendOTPHandler(req: Request, res: Response) {
     }
 
     console.log({ otp: otps[0].code });
+    await sendMail(otps[0].adminUser.email, otps[0].code);
 
     res.json({
       msg: "Otp resend successfully",

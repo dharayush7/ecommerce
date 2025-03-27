@@ -34,7 +34,7 @@ export async function loginHandler(req: Request, res: Response) {
     if (user) {
       res.json({
         msg: "Authenticate",
-        userId: user.id,
+        data: user,
       });
       return;
     }
@@ -47,7 +47,7 @@ export async function loginHandler(req: Request, res: Response) {
     });
     res.json({
       msg: "User Saved",
-      userId: newUser.id,
+      data: newUser,
     });
   } catch (error) {
     console.log(error);

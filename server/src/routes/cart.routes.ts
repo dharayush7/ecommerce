@@ -6,6 +6,7 @@ import {
   getCartHandler,
   incrCount,
   removeProductHandler,
+  switchToLater,
 } from "@/controllers/cart.controller";
 
 const router = Router();
@@ -15,6 +16,7 @@ router.post("/add", addProductToCart);
 router.get("/get", getCartHandler);
 router.get("/increase", incrCount);
 router.get("/decrease", decrCount);
+router.get("/switch", switchToLater);
 router.post("/remove", removeProductHandler);
 
 export default router;

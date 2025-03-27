@@ -24,3 +24,38 @@ export async function getCategoryHandler(req: Request, res: Response) {
     });
   }
 }
+
+export async function getProductByCategory(req: Request, res: Response) {
+  const categoryId = req.params.id;
+  try {
+    const listOfProduct = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+      include: {
+        productOnCategories: {
+          select: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!listOfProduct) {
+      res.json(400).json({
+        msg: "Category not found",
+      });
+      return;
+    }
+
+    res.json({
+      msg: "Products fetched",
+      data: listOfProduct.productOnCategories.map((e) => e.product),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+}

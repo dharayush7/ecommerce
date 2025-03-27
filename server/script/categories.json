@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cat_floral",
+    "name": "Floral",
+    "description": "Fragrances dominated by flower scents like rose, jasmine, or lily. Perfect for romantic and feminine vibes."
+  },
+  {
+    "id": "cat_citrus",
+    "name": "Citrus",
+    "description": "Bright, zesty scents with notes of lemon, orange, or bergamot. Ideal for daytime freshness."
+  },
+  {
+    "id": "cat_woody",
+    "name": "Woody",
+    "description": "Warm, earthy fragrances with sandalwood, cedar, or patchouli. Great for秋冬 and masculine profiles."
+  },
+  {
+    "id": "cat_gourmand",
+    "name": "Gourmand",
+    "description": "Sweet, edible-inspired scents like vanilla, caramel, or chocolate. Comforting and playful."
+  },
+  {
+    "id": "cat_fresh",
+    "name": "Fresh",
+    "description": "Clean, aquatic, or green notes (e.g., ocean breeze, cucumber). Light and energizing."
+  },
+  {
+    "id": "cat_oriental",
+    "name": "Oriental",
+    "description": "Exotic blends with spices, amber, or incense. Sensual and long-lasting."
+  },
+  {
+    "id": "cat_oud",
+    "name": "Oud",
+    "description": "Luxurious Middle Eastern-inspired scents with woody, smoky richness. Unisex and bold."
+  },
+  {
+    "id": "cat_fruity",
+    "name": "Fruity",
+    "description": "Juicy notes like berry, peach, or mango. Youthful and vibrant."
+  }
+]

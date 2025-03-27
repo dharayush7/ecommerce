@@ -88,3 +88,20 @@ export interface User {
   email: string | null;
   isEmailVerified: boolean;
 }
+
+export interface AddCarouselRequest {
+  sessionId: string;
+  link: string;
+  preference: string;
+  isBlack: boolean;
+  imageId: string;
+  position: string;
+}
+
+export interface AddCarousel {
+  link: string;
+  preference: string;
+  isBlack: boolean;
+  imageId: string;
+  position: string;
+}

@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { useUploadThing } from "@/lib/uploadthing";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Attachment {
   file: File;
@@ -16,11 +17,9 @@ export default function useMediaUpload() {
     onBeforeUploadBegin(files) {
       const renamedFiles = files.map((file) => {
         const extention = file.name.split(".").pop();
-        return new File(
-          [file],
-          `attachment_${crypto.randomUUID()}.${extention}`,
-          { type: file.type }
-        );
+        return new File([file], `attachment_${uuidv4()}.${extention}`, {
+          type: file.type,
+        });
       });
 
       setAttachments((prev) => [
