@@ -105,3 +105,20 @@ export interface AddCarousel {
   imageId: string;
   position: string;
 }
+
+export interface Carousel {
+  isBlack: boolean;
+  position: string;
+  preference: number;
+  link: string;
+  id: string;
+  createdAt: Date;
+  images: {
+    url: string;
+  }[];
+}
+
+export interface GetCarouselRespone {
+  msg: string;
+  data: Carousel[];
+}

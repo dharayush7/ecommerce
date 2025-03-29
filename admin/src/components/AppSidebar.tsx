@@ -21,7 +21,7 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/carousel",
     icon: Home,
   },
   {

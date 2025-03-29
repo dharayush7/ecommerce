@@ -51,7 +51,15 @@ function getProductByCategory(req, res) {
                 include: {
                     productOnCategories: {
                         select: {
-                            product: true,
+                            product: {
+                                include: {
+                                    images: {
+                                        select: {
+                                            url: true,
+                                        },
+                                    },
+                                },
+                            },
                         },
                     },
                 },
@@ -65,6 +73,10 @@ function getProductByCategory(req, res) {
             res.json({
                 msg: "Products fetched",
                 data: listOfProduct.productOnCategories.map((e) => e.product),
+                category: {
+                    name: listOfProduct.name,
+                    id: listOfProduct.id,
+                },
             });
         }
         catch (error) {

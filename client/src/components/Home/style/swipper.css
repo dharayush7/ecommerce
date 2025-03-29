@@ -1,0 +1,23 @@
+#sw .swiper-wrapper {
+  height: 100%;
+}
+
+#sw .swiper-slide {
+  background-color: transparent;
+}
+
+#sw .swiper-pagination-bullet {
+  background-color: grey;
+}
+
+#sw .swiper-pagination-bullet-active {
+  background-color: orange;
+}
+
+#sw .swiper-pagination {
+  bottom: -6px !important;
+}
+
+#car .swiper-pagination-bullet {
+  background-color: rgb(255, 255, 255) !important;
+}

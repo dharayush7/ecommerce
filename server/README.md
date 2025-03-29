@@ -722,6 +722,90 @@ Headers:
 }
 ```
 
+### Carousel Routes
+
+#### POST /admin/carousel/add
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+Body:
+
+```json
+{
+  "imageId": "image-id",
+  "isBlack": true,
+  "position": "LEFT",
+  "preference": "1",
+  "link": "https://example.com"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "carousel added"
+}
+```
+
+#### GET /admin/carousel/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Carousel fetched",
+  "data": [
+    {
+      "id": "carousel-id",
+      "link": "https://example.com",
+      "preference": 1,
+      "isBlack": true,
+      "position": "LEFT",
+      "images": ["image-id-1", "image-id-2"]
+    }
+  ]
+}
+```
+
+#### DELETE /admin/carousel/delete/:id
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer session-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "carousel deleted"
+}
+```
+
 ### Admin Upload Routes
 
 These routes are protected by the `uploadMiddleware`.
@@ -824,7 +908,15 @@ Headers:
 ```json
 {
   "msg": "Authenticate",
-  "userId": "user-id"
+  "data": {
+    "mobileNo": "mobile-no",
+    "uid": "uid",
+    "id": "id",
+    "name": "user-name",
+    "email": "user-email | null",
+    "isEmailVerified": false,
+    "blocked": false
+  }
 }
 ```
 
@@ -871,7 +963,8 @@ Body:
 
 ```json
 {
-  "msg": "profile updated"
+  "name": "user-name",
+  "email": "user-email"
 }
 ```
 
@@ -879,12 +972,7 @@ Body:
 
 ```json
 {
-  "msg": "User fetched",
-  "data": {
-    "mobileNo": "mobile-number",
-    "name": "user-name",
-    "email": "user-email"
-  }
+  "msg": "User updated"
 }
 ```
 
@@ -922,9 +1010,67 @@ Body:
 }
 ```
 
+#### GET /product/get/:id
+
+**Request:**
+
+**Response:**
+
+```json
+{
+  "msg": "Product fetched",
+  "data": {
+    "praduct": {
+      "id": "peoduct-id",
+      "name": "Product Name",
+      "sellPrice": 80.0,
+      "maxPrice": 100.0,
+      "description": "product-description",
+      "description2": "product-description2",
+      "description3": "product-description3",
+      "points": ["point1", "point2"],
+      "fragrence": "product-fragrence",
+      "strength": "product-strength",
+      "preference": "product-preference",
+      "sustainable": "product-sustainable",
+      "type": "product-type",
+      "idealFor": "product-ideal-for",
+      "quantity": 100,
+      "images": [
+        {
+          "url": "images-url"
+        }
+      ]
+    },
+    "suggestedProduct": [
+      {
+        "id": "suggested-product-id",
+        "name": "suggested-product-name",
+        "sellPrice": "suggested-product-sellPrice",
+        "maxPrice": "suggested-product-maxPrice",
+        "description": "suggested-product-description",
+        "tags": [
+          {
+            "id": "tag-id",
+            "name": "tag-name"
+          }
+        ],
+        "categories": [
+          {
+            "id": "category-id",
+            "name": "category-name"
+          }
+        ],
+        "images": ["image-url"]
+      }
+    ]
+  }
+}
+```
+
 ### Category Routes
 
-#### GET /category/get
+#### GET /category/get/:id
 
 **Request:**
 
@@ -935,10 +1081,47 @@ Body:
   "msg": "Categories fetched",
   "data": [
     {
-      "id": "category-id",
-      "name": "Category Name"
+      "id": "peoduct-id",
+      "name": "Product Name",
+      "sellPrice": 80.0,
+      "maxPrice": 100.0,
+      "description": "product-description",
+      "description2": "product-description2",
+      "description3": "product-description3",
+      "points": ["point1", "point2"],
+      "fragrence": "product-fragrence",
+      "strength": "product-strength",
+      "preference": "product-preference",
+      "sustainable": "product-sustainable",
+      "type": "product-type",
+      "idealFor": "product-ideal-for",
+      "quantity": 100,
+      "images": [
+        {
+          "url": "images-url"
+        }
+      ]
     }
-  ]
+  ],
+  "category": {
+    "name": "category-name",
+    "id": "category-id"
+  }
+}
+```
+
+### Category Routes
+
+#### GET /category/get/
+
+**Request:**
+
+**Response:**
+
+```json
+{
+  "msg": "Products fetched",
+  "data": []
 }
 ```
 
@@ -1015,7 +1198,15 @@ Headers:
       "productId": "product-id",
       "quantity": 2,
       "product": {
-        "name": "Product Name"
+        "name": "Product Name",
+        "description": "Product description",
+        "sellPrice": "Product sellprice",
+        "maxPrice": "Product maxprice",
+        "images": [
+          {
+            "url": "image-url"
+          }
+        ]
       }
     }
   ]

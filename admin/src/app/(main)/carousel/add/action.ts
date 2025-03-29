@@ -15,7 +15,7 @@ export const addCarousel = async (data: AddCarousel) => {
       sessionId: auth.value,
       ...data,
     });
-    redirect("/");
+    redirect("/carousel");
   } catch (error) {
     if (isRedirectError(error)) throw error;
     if (error instanceof Error) {

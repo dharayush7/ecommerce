@@ -79,8 +79,19 @@ function getCartHandler(req, res) {
                     product: {
                         select: {
                             name: true,
+                            description: true,
+                            sellPrice: true,
+                            maxPrice: true,
+                            images: {
+                                select: {
+                                    url: true,
+                                },
+                            },
                         },
                     },
+                },
+                orderBy: {
+                    productId: "desc",
                 },
             });
             res.json({
