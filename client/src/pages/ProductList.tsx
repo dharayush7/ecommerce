@@ -48,7 +48,7 @@ export default function ProductList() {
 
   useEffect(() => {
     if (!params.id) {
-      navigate("/");
+      navigate("/error");
     }
   }, [navigate, params.id]);
 
@@ -62,7 +62,7 @@ export default function ProductList() {
     setOpenSections((prev) => ({ ...prev, [sectionName]: !prev[sectionName] }));
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: () => getCategoryProducts({ categoryId: params.id! }),
     queryKey: ["category", params.id!],
   });
@@ -71,7 +71,8 @@ export default function ProductList() {
     return <PerfumeLoader isLoading />;
   }
 
-  if (!data) {
+  if (!data || isError || !data.category || !data.data) {
+    navigate("/error");
     return <></>;
   }
 
@@ -145,7 +146,7 @@ export default function ProductList() {
                     }`}
                   >
                     {filter.options.map((option, id) => (
-                      <div className="flex ">
+                      <div className="flex" key={id}>
                         <input
                           id={`${id}`}
                           type="checkbox"
@@ -190,6 +191,7 @@ export default function ProductList() {
                 setIsQuickView={setIsQuickView}
                 setProduct={setProduct}
                 setShow={setShow}
+                key={product.id}
               />
             ))}
           </div>

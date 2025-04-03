@@ -88,10 +88,12 @@ const CartPage: React.FC = () => {
                   </h2>
 
                   {/* Product Card */}
-                  {data.map((item) => {
-                    if (item.isSaveForLater) return;
-                    return <CartCard item={item} key={item.productId} />;
-                  })}
+                  <div className="space-y-4">
+                    {data.map((item) => {
+                      if (item.isSaveForLater) return;
+                      return <CartCard item={item} key={item.productId} />;
+                    })}
+                  </div>
                 </div>
 
                 {/* Right Section - Price Details */}

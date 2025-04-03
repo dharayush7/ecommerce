@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Address } from "../../typs/address";
 import stateCityData from "@/data/stateCityData.json";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { AddressType, StateCityDataType } from "@/lib/types";
+import { useMutation } from "@tanstack/react-query";
+import { addAddress, updateAddress } from "@/service/address";
+import { useAuth } from "@/hook/AuthProvider";
+import { useNavigate } from "react-router";
+import { queryClient } from "@/main";
 
 interface AddressFormProps {
   isEdit?: boolean;
@@ -15,10 +20,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
   initialData,
   onClose,
 }) => {
-  const blankData: AddressType = {
+  const blankData: Omit<AddressType, "id"> = {
     address1: "",
     city: "",
-    country: "",
+    country: "India",
     firstName: "",
     lastName: "",
     phoneNumber: "",
@@ -28,31 +33,59 @@ export const AddressForm: React.FC<AddressFormProps> = ({
     alternatePhoneNumber: "",
     landmark: "",
   };
-  const [formData, setFormData] = useState<AddressType>(
+  const [formData, setFormData] = useState<Omit<AddressType, "id">>(
     initialData || blankData
   );
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
-    // const data = {
-    //   firstName: formData.get("firstName") as string,
-    //   lastName: formData.get("lastName") as string,
-    //   company: formData.get("company") as string,
-    //   address1: formData.get("address1") as string,
-    //   address2: formData.get("address2") as string,
-    //   city: formData.get("city") as string,
-    //   postCode: formData.get("postCode") as string,
-    //   country: formData.get("country") as string,
-    //   state: formData.get("state") as string,
-    //   isDefault: formData.get("isDefault") === "true",
-    //   gstNo: formData.get("gstNo") as string,
-    // };
-    // onSubmit(data);
-  };
-
   const [state, setState] = useState<keyof StateCityDataType | null>(
     (initialData?.state || null) as keyof StateCityDataType | null
   );
+
+  const navigate = useNavigate();
+  const { dbUser, isMutating } = useAuth();
+
+  useEffect(() => {
+    if (!isMutating && !dbUser) {
+      navigate("/login");
+    }
+  }, [dbUser, isMutating, navigate]);
+
+  const { mutate: addAddressMutation, status: addAddressStatus } = useMutation({
+    mutationFn: addAddress,
+    mutationKey: ["address"],
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ["address"],
+      });
+      onClose();
+    },
+  });
+
+  const { mutate: updateAddressMutation, status: updateAddressStatus } =
+    useMutation({
+      mutationFn: updateAddress,
+      mutationKey: ["adddress", initialData?.id],
+      onSuccess: () => {
+        queryClient.refetchQueries({
+          queryKey: ["address"],
+        });
+        onClose();
+      },
+    });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isEdit && initialData) {
+      updateAddressMutation({
+        uid: dbUser!.uid,
+        data: {
+          ...formData,
+          id: initialData.id,
+        },
+      });
+    } else {
+      addAddressMutation({ uid: dbUser!.uid, data: formData });
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-[#000]/30  bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -184,7 +217,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
               name="address2"
               id="address2"
               className="mt-1 block w-full p-2 border-1 rounded-md border-gray-3 shadow-sm focus:border-blue-5 focus:ring-blue-5"
-              value={formData.address2}
+              value={formData.address2 || ""}
               onChange={(e) =>
                 setFormData({ ...formData, address2: e.target.value })
               }
@@ -222,10 +255,8 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 id="country"
                 required
                 className="mt-1 block w-full rounded-md border-1 p-2 border-gray-3 shadow-sm focus:border-blue-5 focus:ring-blue-5"
-                value={formData.country}
-                onChange={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
+                value={"India"}
+                onChange={() => {}}
               >
                 <option value="India">India</option>
               </select>
@@ -249,8 +280,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 }}
               >
                 <option value="">Select State</option>
-                {Object.keys(stateCityData).map((e) => (
-                  <option value={e}>{e}</option>
+                {Object.keys(stateCityData).map((e, index) => (
+                  <option value={e} key={index}>
+                    {e}
+                  </option>
                 ))}
               </select>
             </div>
@@ -276,8 +309,10 @@ export const AddressForm: React.FC<AddressFormProps> = ({
                 <option value="">Select State</option>
                 {state && (
                   <>
-                    {stateCityData[state].map((e) => (
-                      <option value={e}>{e}</option>
+                    {stateCityData[state]?.map((e, index) => (
+                      <option value={e} key={index}>
+                        {e}
+                      </option>
                     ))}
                   </>
                 )}
@@ -307,14 +342,27 @@ export const AddressForm: React.FC<AddressFormProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-white bg-red-5  rounded-md transition-colors hover:cursor-pointer"
+              className="px-4 py-2 text-white bg-red-5  rounded-md transition-colors hover:cursor-pointer disabled:bg-red-300"
+              disabled={
+                addAddressStatus === "pending" ||
+                updateAddressStatus === "pending"
+              }
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-white bg-black  rounded-md transition-colors hover:cursor-pointer"
+              className="px-4 py-2 text-white bg-black  rounded-md transition-colors hover:cursor-pointer flex justify-center items-center gap-2 disabled:bg-zinc-700
+              "
+              disabled={
+                addAddressStatus === "pending" ||
+                updateAddressStatus === "pending"
+              }
             >
+              {(addAddressStatus === "pending" ||
+                updateAddressStatus === "pending") && (
+                <Loader2 size={20} className="animate-spin" />
+              )}
               {isEdit ? "Save Changes" : "Add Address"}
             </button>
           </div>

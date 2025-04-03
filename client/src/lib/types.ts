@@ -60,6 +60,7 @@ export interface StateCityDataType {
 }
 
 export interface AddressType {
+  id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -174,4 +175,9 @@ export interface CartCardProps {
       url: string;
     }[];
   };
+}
+
+export interface getAddressRespons {
+  msg: string;
+  data: AddressType[];
 }

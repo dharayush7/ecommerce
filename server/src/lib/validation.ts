@@ -108,3 +108,42 @@ export const addCarouselSchema = z.object({
   preference: z.string({ message: "Preference should be a number" }),
   link: z.string(),
 });
+
+export const addAddressSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  phoneNumber: z.string().min(10, "Phone number should be valid"),
+  alternatePhoneNumber: z.optional(
+    z.string().min(10, "Phone number should be valid")
+  ),
+  address1: z.string(),
+  address2: z.optional(z.string()),
+  landmark: z.optional(z.string()),
+  city: z.string(),
+  state: z.string(),
+  country: z.string(),
+  postCode: z
+    .string()
+    .length(6, "Postcode must be 6 characters")
+    .transform((e) => Number(e)),
+});
+
+export const updateAddressSchema = z.object({
+  addressId: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  phoneNumber: z.string().min(10, "Phone number should be valid"),
+  alternatePhoneNumber: z.optional(
+    z.string().min(10, "Phone number should be valid")
+  ),
+  address1: z.string(),
+  address2: z.optional(z.string()),
+  landmark: z.optional(z.string()),
+  city: z.string(),
+  state: z.string(),
+  country: z.string(),
+  postCode: z
+    .string()
+    .length(6, "Postcode must be 6 characters")
+    .transform((e) => Number(e)),
+});

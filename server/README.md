@@ -1297,6 +1297,141 @@ Body:
 }
 ```
 
+### Address Routes
+
+#### GET /address/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Addresses fetched",
+  "data": [
+    {
+      "id": "address-id",
+      "firstName": "John",
+      "lastName": "Doe",
+      "phoneNumber": "1234567890",
+      "alternatePhoneNumber": "0987654321",
+      "address1": "123 Main St",
+      "address2": "Apt 4B",
+      "landmark": "Near Park",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "postCode": "10001"
+    }
+  ]
+}
+```
+
+#### POST /address/add
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "1234567890",
+  "alternatePhoneNumber": "0987654321",
+  "address1": "123 Main St",
+  "address2": "Apt 4B",
+  "landmark": "Near Park",
+  "city": "New York",
+  "state": "NY",
+  "country": "USA",
+  "postCode": "10001"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Address saved successfully"
+}
+```
+
+#### POST /address/update
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "addressId": "address-id",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "1234567890",
+  "alternatePhoneNumber": "0987654321",
+  "address1": "123 Main St",
+  "address2": "Apt 4B",
+  "landmark": "Near Park",
+  "city": "New York",
+  "state": "NY",
+  "country": "USA",
+  "postCode": "10001"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Address updated successfully"
+}
+```
+
+#### GET /address/delete/:id
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Address deleted"
+}
+```
+
 #### User Middleware
 
 - **File:** `src/middleware/user.middleware.ts`

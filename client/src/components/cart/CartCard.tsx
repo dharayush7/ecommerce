@@ -85,16 +85,16 @@ export default function CartCard({ item }: { item: CartCardProps }) {
     >
       <div className="w-full flex items-center flex-col md:flex-row gap-4">
         {/* Product Image */}
-        <div className=" h-28 bg-gray-3 rounded-md flex justify-center items-center">
+        <div className=" h-28 bg-white rounded-md flex justify-center items-center">
           <img
-            className=" h-full object-cover rounded-md w-44"
+            className="w-34 h-auto object-contain rounded-md"
             src={item.product.images[0].url}
             alt="Product"
           />
         </div>
 
         {/* Product Details */}
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full mt-2">
           <p className="font-medium">{item.product.name}</p>
           <p className="text-sm text-gray-5">{item.product.description}</p>
           {/* <p className="text-sm text-gray-5">

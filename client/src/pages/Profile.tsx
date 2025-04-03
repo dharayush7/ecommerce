@@ -107,7 +107,7 @@ const ProfileEditPage: React.FC = () => {
   }
 
   return (
-    <div className="w-screen flex items-center justify-center h-dvh bg-white">
+    <div className="flex items-center justify-center h-[90vh] bg-white">
       <div className="w-full bg-white rounded-xl overflow-hidden">
         {/* Header with avatar */}
         <div className="w-full flex justify-center items-center flex-col mx-auto bg-white p-6 rounded-lg">

@@ -104,6 +104,29 @@
   --color-slate-7: #314158;
   --color-slate-8: #1d293d;
   --color-slate-95: #020618;
+  --animate-fade-in-right: fade-in-right ease-in-out 0.25s 1;
+  --animate-fade-out-right: fade-out-right ease-in-out 0.25s 1;
+
+  @keyframes fade-in-right {
+    0% {
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+    }
+    100% {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes fade-out-right {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(100%, 0, 0);
+    }
+  }
 }
 
 @layer base {

@@ -21,7 +21,7 @@ export const Hero4 = () => {
         {/* Right Side - Button */}
         <div className="mt-6 md:mt-0">
           <Link
-            to="collections/clinique.html"
+            to="category/cm8ofllb200051fppmxntysix"
             className="px-6 py-2.5 text-lg font-medium tracking-wide transition-transform duration-300  rounded-md  bg-white text-black hover:bg-slate-2 ease-in duration-400"
           >
             SHOP NOW

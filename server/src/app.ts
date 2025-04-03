@@ -15,6 +15,7 @@ import categoryRouter from "@/routes/category.routes";
 import tagRouter from "@/routes/tag.routes";
 import cartRouter from "@/routes/cart.routes";
 import profileRouter from "@/routes/profile.routes";
+import addressRouter from "@/routes/address.routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -47,6 +48,7 @@ app.use("/product", productRouter);
 app.use("/category", categoryRouter);
 app.use("/tag", tagRouter);
 app.use("/cart", cartRouter);
+app.use("/address", addressRouter);
 
 app.listen(Number(PORT), () => {
   console.log(`Server started at port:${PORT}`);

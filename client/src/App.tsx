@@ -16,6 +16,7 @@ import Checkout from "./pages/Checkout";
 import OrderHistory from "./pages/OrderHistory";
 import AboutUsPage from "./pages/AboutUs";
 import OrderDetails from "./pages/OrderDetails";
+import ErrorPage from "./pages/Error";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/order-details" element={<OrderDetails />} />
+        <Route path="/error" element={<ErrorPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

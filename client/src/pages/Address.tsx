@@ -1,45 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { AddressCard } from "@/components/Address/AddressCard";
 import { AddressForm } from "../components/Address/AddressForm";
 import { AddressType } from "@/lib/types";
-// import { DeleteConfirmation } from "../components/Address/DeleteConfirmation";
-
-// Sample initial data
-const initialAddresses: AddressType[] = [
-  {
-    firstName: "Aman",
-    lastName: "Parihar",
-    address1: "Mahiar bypass dilaura radha chauk satna",
-    city: "Satna",
-    postCode: "485001",
-    state: "Madhya Pradesh",
-    country: "India",
-    phoneNumber: "1245448598",
-    address2: "ygfi3gfierufg fjheifbiergf bfiergbfireb",
-    landmark: "uiregiuerg",
-    alternatePhoneNumber: "+69598989879879",
-  },
-  {
-    firstName: "Ayusgd",
-    lastName: "ebgr",
-    address1: "Mabrtbrtura radha chauk satna",
-    city: "Satna",
-    postCode: "485001",
-    state: "Madhya Pradesh",
-    country: "India",
-    phoneNumber: "1245448598",
-    address2: "ygfi3gfierufg fjheifbiergf bfiergbfireb",
-    landmark: "uiregiuerg",
-    alternatePhoneNumber: "+69598989879879",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getAddress } from "@/service/address";
+import { useAuth } from "@/hook/AuthProvider";
+import PerfumeLoader from "@/components/Loader/ModernLoader";
+import { useNavigate } from "react-router";
 
 export default function Address() {
-  // const [addresses, _setAddresses] = useState<AddressType[]>(initialAddresses);
-  const addresses = initialAddresses;
   const [showAddForm, setShowAddForm] = useState(false);
   const [editAddress, setEditAddress] = useState<AddressType | null>(null);
+  const { dbUser, isMutating } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isMutating && !dbUser) {
+      navigate("/login");
+    }
+  }, [dbUser, isMutating, navigate]);
+
+  const { data, isLoading } = useQuery({
+    queryFn: () => getAddress({ uid: dbUser!.uid }),
+    queryKey: ["address"],
+  });
+
+  if (isMutating || isLoading) {
+    return <PerfumeLoader isLoading />;
+  }
+
+  if (!isLoading && !data) {
+    navigate("/error");
+  }
 
   return (
     <div className="min-h-screen bg-gray-05  p-4 md:p-8">
@@ -49,7 +42,7 @@ export default function Address() {
             My Addresses
           </h1>
 
-          {addresses.length > 0 && (
+          {data && data.length > 0 && (
             <button
               onClick={() => setShowAddForm(true)}
               className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-md  hover:cursor-pointer transition-colors"
@@ -60,9 +53,9 @@ export default function Address() {
           )}
         </div>
 
-        {addresses.length === 0 ? (
-          <div className="flex flex-col h-!96 items-center shadow-2xl  justify-center py-16 px-4">
-            <div className="w-16 h-16 bg-gray-1 rounded-full flex  border-4 items-center justify-center mb-4">
+        {data && data.length === 0 ? (
+          <div className="flex flex-col h-96 items-center shadow-lg justify-center py-16 px-4">
+            <div className="w-16 h-16 bg-white rounded-full flex border-4 items-center justify-center mb-4">
               <Plus className="w-8 h-8 text-gray-4 " />
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -74,7 +67,7 @@ export default function Address() {
             </p>
             <button
               onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-md  transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-black text-white rounded-md cursor-pointer transition-colors"
             >
               <Plus size={20} />
               Add New Address
@@ -82,12 +75,12 @@ export default function Address() {
           </div>
         ) : (
           <div className="grid grid-cols-1  gap-6">
-            {addresses.map((address, index) => (
+            {data?.map((address, index) => (
               <AddressCard
                 key={index}
                 address={address}
                 onEdit={setEditAddress}
-                isActive={index > 0}
+                isActive={false}
               />
             ))}
           </div>

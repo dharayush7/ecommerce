@@ -43,7 +43,6 @@ export default function Home() {
   const { isMutating } = useAuth();
 
   useEffect(() => {
-    console.log({ data, isLoading, isError, error });
     if (!isLoading && !isError && data) {
       const newArrivalsId = "cm8ofllaz00021fpp79dgkufl";
       const bestSellersId = "cm8ofllau00001fpp69owa2p6";

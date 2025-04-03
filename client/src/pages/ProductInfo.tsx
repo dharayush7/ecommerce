@@ -25,6 +25,7 @@ import { addItemToCart } from "@/service/cart";
 import { IoIosCheckmark } from "react-icons/io";
 import { Loader2 } from "lucide-react";
 import { useCart } from "@/hook/CartProvider";
+import ErrorPage from "./Error";
 
 export default function ProductInfo() {
   const [quantity, setQuantity] = useState(1);
@@ -42,10 +43,10 @@ export default function ProductInfo() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!params.id) navigate("/");
+    if (!params.id) navigate("/error");
   }, [navigate, params.id]);
 
-  const { data, error, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: () => productGet(params.id!),
     queryKey: ["product", params.id!],
   });
@@ -61,13 +62,22 @@ export default function ProductInfo() {
     onSuccess: () => refetch(),
   });
 
-  if (isError || !data) {
-    return <p>{error?.message}</p>;
+  if (isLoading) {
+    return <PerfumeLoader isLoading />;
+  }
+
+  if (!data) {
+    return <ErrorPage />;
+  }
+
+  if (isError) {
+    navigate("/error");
+    return;
   }
 
   return (
     <>
-      <div className="w-full pr-7 py-8 border border-primary">
+      <div className="w-full px-2 py-8 border border-primary">
         <div className="flex items-center space-x-2 text-white text-sm py-3 px-6 bg-slate-900">
           <a href="/" className="hover:text-gray-2">
             Home
@@ -85,7 +95,7 @@ export default function ProductInfo() {
         <div className="flex flex-col md:flex-row justify-center mt-3 ">
           <div className="flex w-full flex-col lg:flex-row items-center justify-center md:justify-evenly h-min mt-14  md:flex-col-reverse ">
             {/* Thumbnail Images for Mobile and Desktop */}
-            <div className="hidden md:flex md:text-start px-1 py-1  lg:flex-col  overflow-x-auto space-x-2 scroll-mx-1 h-5 md:h-auto  gap-2 mt-5">
+            <div className="hidden md:flex md:text-start px-1 py-1  lg:flex-col overflow-x-auto space-x-2 scroll-mx-1 h-5 md:h-auto  gap-2 mt-5">
               {data.data.product.images.map((img, index) => (
                 <img
                   key={index}
@@ -102,17 +112,17 @@ export default function ProductInfo() {
             </div>
 
             {/* Selected Image */}
-            <div className="flex max-lg:h-78 lg:py-1">
+            <div className="flex w-full sm:max-w-[35vw] lg:py-1 px-4">
               <img
                 src={selectedImage}
                 alt="Product"
-                className="w-full max-w-md rounded-lg object-contain  "
+                className="w-full rounded-lg object-cover py-"
               />
             </div>
           </div>
 
           {/* Thumbnail Images for Mobile (Horizontal Scrolling) */}
-          <div className=" md:hidden flex justify-start mt-10 overflow-x-auto space-x-2 scroll-mx-1">
+          <div className="md:hidden flex justify-start mt-10 overflow-x-auto space-x-2 scroll-mx-1 pl-4">
             {data.data.product.images.map((img, index) => (
               <img
                 key={index}
@@ -129,7 +139,7 @@ export default function ProductInfo() {
           </div>
 
           {/* Product Details Section */}
-          <div className="py-5 w-full mt-8 pl-11">
+          <div className="py-5 w-full mt-8 px-4">
             <h1 className="text-3xl font-bold text-gray-900 mb-3">
               {data.data.product.name}
             </h1>
@@ -226,7 +236,7 @@ export default function ProductInfo() {
             {/* Add to Cart Button */}
             {dbUser && (
               <button
-                className="mt-6 w-full bg-black text-white py-2.5 rounded-md flex justify-center items-center gap-2 hover:bg-gray-8 disabled:bg-slate-600 disabled:text-white"
+                className="mt-6 w-full bg-black text-white py-2.5 rounded-md flex justify-center items-center gap-2 hover:bg-gray-8 disabled:bg-slate-500 disabled:text-white"
                 onClick={() =>
                   mutate({
                     uid: dbUser.uid,
@@ -336,7 +346,7 @@ export default function ProductInfo() {
           </h1>
           <div
             className="scale-100 flex flex-nowrap overflow-x-scroll pb-3
-          overflow-hidden h-full space-x-4 md:space-x-6 ml-7"
+          overflow-hidden h-full space-x-4 md:space-x-6 pl-7"
           >
             {data.data.suggestedProduct.map((product, id) => (
               <ProductCard

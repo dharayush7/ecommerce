@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 
 import { IoIosCheckmark } from "react-icons/io";
 import { useCart } from "@/hook/CartProvider";
+import { useNavigate } from "react-router";
 
 const ProductCard = ({
   data,
@@ -33,6 +34,7 @@ const ProductCard = ({
 
   const { dbUser } = useAuth();
   const { items, refetch } = useCart();
+  const navigate = useNavigate();
 
   const { mutate, status } = useMutation({
     mutationFn: addItemToCart,
@@ -55,17 +57,14 @@ const ProductCard = ({
         {/* card img start container */}
         <div className="product-image-container">
           <img src={data.images[0]} className="card-img" alt={data.name} />
-
           <div className="top-left-tag-section">
             {bestseller && <div className="bestseller-tag"></div>}
-
             <div className="tag-items py-2">
               {newTag && <div className="tag-item-sale bg-blue-5!">New</div>}
               {sale && <p className="tag-item-sale">Sale</p>}
               {gift && <p className="tag-item-gift">Gift</p>}
             </div>
           </div>
-
           <div className="top-right-tag-section">
             <div className="floating-buttons-wrap">
               <div className="floating-buttons ">
@@ -84,7 +83,6 @@ const ProductCard = ({
               </div>
             </div>
           </div>
-
           <div className="overlay">
             <button
               className="quick-view-2"
@@ -127,17 +125,39 @@ const ProductCard = ({
           </div>
         </div>
         {/* card image container end  */}
-
         {/* card body start  */}
-
         <div className="card-body">
-          <h3 className="card-title">{data.name}</h3>
-          <p className="card-description">{data.description}</p>
-
+          <h3
+            className="card-title"
+            onClick={() => {
+              navigate(`/product/${data.id}`);
+            }}
+          >
+            {data.name}
+          </h3>
+          <p
+            className="card-description"
+            onClick={() => {
+              navigate(`/product/${data.id}`);
+            }}
+          >
+            {data.description}
+          </p>
           <div className="price-details">
-            <span className="current-price">₹{Math.round(data.sellPrice)}</span>
+            <span
+              className="current-price"
+              onClick={() => {
+                navigate(`/product/${data.id}`);
+              }}
+            >
+              ₹{Math.round(data.sellPrice)}
+            </span>
             {data.maxPrice && data.maxPrice > data.sellPrice && (
-              <>
+              <div
+                onClick={() => {
+                  navigate(`/product/${data.id}`);
+                }}
+              >
                 <span className="original-price">₹{data.maxPrice}</span>
                 <span className="discount">
                   -{" "}
@@ -146,12 +166,11 @@ const ProductCard = ({
                   )}
                   % off
                 </span>
-              </>
+              </div>
             )}
-
             {dbUser && (
               <button
-                className="buy-now-sm w-full mt-2"
+                className="buy-now-sm !w-full mt-2 disabled:!bg-slate-500 !flex !justify-center !items-center !gap-2 md:!hidden"
                 onClick={() =>
                   mutate({ productId: data.id, qyt: 1, uid: dbUser.uid })
                 }
@@ -175,7 +194,6 @@ const ProductCard = ({
             )}
           </div>
         </div>
-
         {/* card body end  */}
       </div>
     </div>

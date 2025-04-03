@@ -76,6 +76,7 @@ model User {
   blocked         Boolean          @default(false)
   createdAt       DateTime         @default(now())
   productOnCarts  ProductOnCarts[]
+  addresses       Address[]
 
   @@map("user")
 }
@@ -167,4 +168,26 @@ model Carousel {
 enum positionEnum {
   LEFT
   RIGHT
+}
+
+model Address {
+  id                   String   @id @default(cuid())
+  firstName            String
+  lastName             String
+  phoneNumber          String
+  alternatePhoneNumber String?
+  address1             String
+  address2             String?
+  landmark             String?
+  city                 String
+  state                String
+  country              String
+  postCode             Int
+  isDeleted            Boolean  @default(false)
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("address")
 }
