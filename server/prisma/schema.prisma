@@ -67,16 +67,17 @@ model AdminSession {
 }
 
 model User {
-  id              String           @id @default(cuid())
-  uid             String           @unique
-  mobileNo        String           @unique
-  name            String           @default("user")
-  email           String?          @unique
-  isEmailVerified Boolean          @default(false)
-  blocked         Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  productOnCarts  ProductOnCarts[]
-  addresses       Address[]
+  id                String              @id @default(cuid())
+  uid               String              @unique
+  mobileNo          String              @unique
+  name              String              @default("user")
+  email             String?             @unique
+  isEmailVerified   Boolean             @default(false)
+  blocked           Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  productOnCarts    ProductOnCarts[]
+  addresses         Address[]
+  productOnWishList ProductOnWishList[]
 
   @@map("user")
 }
@@ -115,6 +116,7 @@ model Product {
   updatedAt           DateTime              @updatedAt
   productOnCategories ProductOnCategories[]
   productOnCart       ProductOnCarts[]
+  productOnWishlist   ProductOnWishList[]
 
   @@map("product")
 }
@@ -190,4 +192,14 @@ model Address {
   updatedAt            DateTime @updatedAt
 
   @@map("address")
+}
+
+model ProductOnWishList {
+  userId    String
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+  @@map("product_on_wishlist")
 }

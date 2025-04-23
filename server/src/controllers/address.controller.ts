@@ -37,9 +37,7 @@ export async function addAddressHandler(req: Request, res: Response) {
 export async function updateAddressHandler(req: Request, res: Response) {
   const user = req.user;
   const body = req.body;
-  console.log(body);
   const result = updateAddressSchema.safeParse(body);
-  console.log(result.error);
   if (!result.success) {
     res.status(400).json({
       msg: result.error.issues[0].message,

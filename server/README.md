@@ -1432,6 +1432,73 @@ Headers:
 }
 ```
 
+### Wishlist Routes
+
+#### POST /wishlist/curd
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+Body:
+
+```json
+{
+  "productId": "product-id"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Wishlist updated"
+}
+```
+
+#### GET /wishlist/get
+
+**Request:**
+
+Headers:
+
+```json
+{
+  "Authorization": "Bearer user-uid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "msg": "Cart fetched",
+  "data": [
+    {
+      "productId": "product-id",
+      "quantity": 2,
+      "product": {
+        "name": "Product Name",
+        "description": "Product description",
+        "sellPrice": "Product sellprice",
+        "maxPrice": "Product maxprice",
+        "images": [
+          {
+            "url": "image-url"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
 #### User Middleware
 
 - **File:** `src/middleware/user.middleware.ts`
